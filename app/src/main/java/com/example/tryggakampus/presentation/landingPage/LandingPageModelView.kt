@@ -1,4 +1,4 @@
-package com.example.tryggakampus.presentation.landing_page
+package com.example.tryggakampus.presentation.landingPage
 
 class LandingPageModelView {
 }
