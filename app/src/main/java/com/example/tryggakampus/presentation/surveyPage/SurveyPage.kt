@@ -6,7 +6,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tryggakampus.data.SurveyQuestions
 
 @Composable
@@ -15,39 +18,62 @@ fun SurveyPage(title: String) {
     var answers = remember { mutableStateListOf(*Array(questions.size) { "" }) }
     //still need val in order to store the questions
 
+    // title area
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp))
     {
         item {
-            Text(text = title)
+            Text(
+                text = title,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        //this is to get both the question and the index
+        // questions and inputfield area
         itemsIndexed(questions) { index, question ->
-            Box(
+            Card(
                 modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth())
-            {
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()) {
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
 
-                    Text(text = "Question ${index + 1}: $question")
-                    TextField(
+                    Text(
+                        text = "Question ${index + 1}: $question",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    OutlinedTextField(
                         value = answers[index],
                         onValueChange = { answers[index] = it },
                         label = { Text("Your Answer") },
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            //color of trygga klassen - light blue
+                            focusedIndicatorColor = Color(0xFF68C3CD),
+                        )
                     )
                 }
             }
         }
 
+        // button area after the questions
         item {
             Spacer(
                 modifier = Modifier.height(16.dp))
