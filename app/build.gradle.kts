@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.21"
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -80,4 +82,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     //Coil
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation ("com.google.firebase:firebase-storage:20.0.1")
+
 }
