@@ -14,6 +14,8 @@ import com.example.tryggakampus.presentation.profilePage.ProfilePage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPage
 import com.example.tryggakampus.presentation.articlesPage.ArticlesPage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel
+import com.example.tryggakampus.presentation.surveyPage.SurveyPage
+
 import kotlinx.serialization.Serializable
 
 val LocalNavController = compositionLocalOf<NavHostController> {
@@ -70,6 +72,16 @@ fun Navigation(
                 composable<Routes.ArticlesPage> {
                     val args = it.toRoute<Routes.ArticlesPage>()
                     ArticlesPage(args.title)
+                }
+
+                composable<Routes.SettingsPage> {
+                    val args = it.toRoute<Routes.SurveyPage>()
+                    SurveyPage(args.title)
+                }
+
+                composable<Routes.SurveyPage> {
+                    val args = it.toRoute<Routes.SurveyPage>()
+                    SurveyPage(args.title)
                 }
 
                 composable<Routes.SettingsPage> {
