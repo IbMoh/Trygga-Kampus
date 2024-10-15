@@ -3,6 +3,7 @@ package com.example.tryggakampus
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,18 +13,31 @@ import com.example.tryggakampus.presentation.landingPage.LandingPage
 import com.example.tryggakampus.presentation.profilePage.ProfilePage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPage
 import com.example.tryggakampus.presentation.articlesPage.ArticlesPage
+import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel
 import kotlinx.serialization.Serializable
 
-// Define a Composition Local for NavController
 val LocalNavController = compositionLocalOf<NavHostController> {
     error("NavController not provided")
 }
 
 sealed interface Routes {
-    @Serializable data class LandingPage(val title: String = "Home"): Routes
-    @Serializable data class SettingsPage(val title: String = "Settings"): Routes
-    @Serializable data class ProfilePage(val title: String = "Profile"): Routes
-    @Serializable data class ArticlesPage(val title: String = "Articles"): Routes
+    fun routeName(): String
+
+    @Serializable data class LandingPage(val title: String = "Home"): Routes {
+        override fun routeName() = "LandingPage"
+    }
+
+    @Serializable data class SettingsPage(val title: String = "Settings"): Routes {
+        override fun routeName() = "SettingsPage"
+    }
+
+    @Serializable data class ProfilePage(val title: String = "Profile"): Routes {
+        override fun routeName() = "ProfilePage"
+    }
+
+    @Serializable data class ArticlesPage(val title: String = "Articles"): Routes {
+        override fun routeName() = "ArticlesPage"
+    }
 }
 
 @Composable
@@ -60,7 +74,8 @@ fun Navigation(
 
                 composable<Routes.SettingsPage> {
                     val args = it.toRoute<Routes.SettingsPage>()
-                    SettingsPage(args.title)
+                    val vm = viewModel<SettingsPageViewModel>()
+                    SettingsPage(vm, args.title)
                 }
             }
         }
