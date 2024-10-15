@@ -76,13 +76,25 @@ fun SurveyPage(title: String) {
         // button area after the questions
         item {
             Spacer(
-                modifier = Modifier.height(16.dp))
+                modifier = Modifier
+                    .height(16.dp))
             Button(
                 onClick = {
                     //button logic here for storing info in dB once its setup
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF68C3CD),
+                    contentColor = Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(4.dp)
             ) {
-                Text("Submit Answers")
+                Text(
+                    "Submit Answers",
+                    fontSize = 18.sp
+                    )
             }
         }
     }
