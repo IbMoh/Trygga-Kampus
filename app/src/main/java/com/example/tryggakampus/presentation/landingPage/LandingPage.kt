@@ -128,8 +128,7 @@ fun LandingPage(title: String) {
             )
             Button(
                 onClick = {
-
-                    navController.navigate(Routes.ProfilePage())
+                    navController.navigate(Routes.ForumPage())
                 },
                 modifier = Modifier
                     .padding(top = 26.dp)
