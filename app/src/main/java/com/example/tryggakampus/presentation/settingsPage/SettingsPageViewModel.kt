@@ -12,10 +12,6 @@ class SettingsPageViewModel: ViewModel() {
     fun setTabIndex(t: ArticleTabs) {
         someTabIndex = t
     }
-
-    fun getTab(): ArticleTabs {
-        return someTabIndex
-    }
 }
 
 enum class ArticleTabs {
