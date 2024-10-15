@@ -1,5 +1,6 @@
 package com.example.tryggakampus.data
 
+//temporary just in order to test displaying the sentences
 object SurveyQuestions {
     val questions = listOf(
         "How often do you think about the effects of drugs or alcohol on your studies?",
@@ -9,6 +10,5 @@ object SurveyQuestions {
         "How confident do you feel about saying 'no' to drugs or alcohol in a social setting?",
         "How often do you find yourself using substances (e.g., alcohol, drugs) to cope with stress or pressure from university life?",
         "Do you believe there's a stigma around seeking help for addiction at your university?"
-
     )
 }
