@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -17,14 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tryggakampus.LocalNavController
+import com.example.tryggakampus.R
 import com.example.tryggakampus.Routes
 
 import com.example.tryggakampus.presentation.component.PageContainer
@@ -33,7 +32,6 @@ import com.example.tryggakampus.presentation.component.PageContainer
 @Composable
 fun LandingPage(title: String) {
 
-    val viewModel: LandingPageModelView = viewModel()
     val navController = LocalNavController.current
 
     val gradientColors = listOf(
@@ -50,9 +48,9 @@ fun LandingPage(title: String) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row{
+            Row {
                 Image(
-                    painter = painterResource(viewModel.image),
+                    painter = painterResource(R.drawable.logo_2),
                     contentDescription = "Logo"
                 )
                 Spacer(
@@ -60,7 +58,7 @@ fun LandingPage(title: String) {
                         .padding(10.dp)
                 )
                 Text(
-                    text = viewModel.title,
+                    text = stringResource(R.string.title),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 30.dp),
@@ -83,7 +81,7 @@ fun LandingPage(title: String) {
             )
 
             Text(
-                text = viewModel.aboutUs,
+                text = stringResource(R.string.about_us),
                 modifier = Modifier,
                 color = Color.Black,
                 fontSize = 20.sp,
@@ -95,7 +93,7 @@ fun LandingPage(title: String) {
                     .padding(9.dp)
             )
             Text(
-                text = viewModel.info1,
+                text = stringResource(R.string.info1),
                 modifier = Modifier,
                 color = Color.Black,
                 fontSize = 20.sp,
@@ -105,9 +103,9 @@ fun LandingPage(title: String) {
             Spacer(
                 modifier = Modifier
                     .padding(36.dp)
-                )
+            )
             Text(
-                text = viewModel.button,
+                text = stringResource(R.string.button),
                 modifier = Modifier,
                 color = Color.Black,
                 fontSize = 20.sp,
@@ -119,7 +117,7 @@ fun LandingPage(title: String) {
                     .padding(9.dp)
             )
             Text(
-                text = viewModel.buttonInfo,
+                text = stringResource(R.string.buttonInfo),
                 modifier = Modifier,
                 color = Color.Black,
                 fontSize = 20.sp,
@@ -131,8 +129,7 @@ fun LandingPage(title: String) {
                     navController.navigate(Routes.ForumPage())
                 },
                 modifier = Modifier
-                    .padding(top = 26.dp)
-                    ,
+                    .padding(top = 26.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red
                 )
