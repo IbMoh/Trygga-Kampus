@@ -16,8 +16,6 @@ class StoryRepositoryImpl: StoryRepository {
     private val columnName = "student-stories"
 
     override suspend fun getAllStories(): List<StoryModel> {
-        val storyModels: MutableList<StoryModel> = mutableListOf()
-
         try {
             val result = db.collection(columnName).get().await()
 
