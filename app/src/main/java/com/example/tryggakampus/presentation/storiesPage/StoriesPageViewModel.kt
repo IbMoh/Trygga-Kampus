@@ -14,6 +14,7 @@ class StoriesPageViewModel: ViewModel() {
         private set
 
     suspend fun loadStories() {
+        stories.clear()
         stories.addAll(StoryRepositoryImpl().getAllStories())
         Log.d("LOAD", "stories: ${stories.size}")
     }
