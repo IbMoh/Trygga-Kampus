@@ -8,15 +8,11 @@ class SurveyRepository {
 
     private val db = FirebaseFirestore.getInstance()
 
-    suspend fun submitSurveyAnswers(answers: List<SurveyAnswer>) {
+    suspend fun submitSurveyAnswers(surveys: List<SurveyAnswer>) {
         try {
             val surveyCollection = db.collection("Student-Survey-Answers")
-            answers.forEach { answer ->
-                val answerMap = mapOf(
-                    "question" to answer.question,
-                    "answer" to answer.answer
-                )
-                surveyCollection.add(answerMap).await()
+            surveys.forEach { survey ->
+                surveyCollection.add(survey).await()
             }
         } catch (e: Exception) {
             throw e
