@@ -63,19 +63,14 @@ fun Navigation(
                     ArticlesPage(args.title)
                 }
 
-                composable<Routes.FormPage> {
-                    val args = it.toRoute<Routes.FormPage>()
-                    FormPage(args.title)
-                }
-
-                composable<Routes.SettingsPage> {
-                    val args = it.toRoute<Routes.SettingsPage>()
-                    SurveyPage(args.title)
-                }
-
                 composable<Routes.SurveyPage> {
                     val args = it.toRoute<Routes.SurveyPage>()
                     SurveyPage(args.title)
+                }
+
+                composable<Routes.FormPage> {
+                    val args = it.toRoute<Routes.FormPage>()
+                    FormPage(args.title)
                 }
 
                 composable<Routes.SettingsPage> {

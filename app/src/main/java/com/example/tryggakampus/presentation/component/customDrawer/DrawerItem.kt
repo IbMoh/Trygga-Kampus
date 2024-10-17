@@ -19,13 +19,13 @@ enum class DrawerItem(
         icon = R.drawable.baseline_articles_24,
         title = "Articles"
     ),
-    Forum(
-        icon = R.drawable.baseline_forum_24,
-        title = "Forum"
-    ),
     Survey(
         icon = R.drawable.baseline_diamond_24,
         title = "Survey"
+    ),
+    Forum(
+        icon = R.drawable.baseline_forum_24,
+        title = "Forum"
     ),
     Settings(
         icon = R.drawable.baseline_settings_24,
