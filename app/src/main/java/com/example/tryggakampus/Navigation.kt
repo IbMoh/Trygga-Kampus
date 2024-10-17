@@ -12,7 +12,7 @@ import com.example.tryggakampus.presentation.landingPage.LandingPage
 import com.example.tryggakampus.presentation.profilePage.ProfilePage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPage
 import com.example.tryggakampus.presentation.articlesPage.ArticlesPage
-import com.example.tryggakampus.presentation.formPage.ForumPage
+import com.example.tryggakampus.presentation.formPage.FormPage
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
 
 import kotlinx.serialization.Serializable
@@ -27,7 +27,7 @@ sealed interface Routes {
     @Serializable data class SettingsPage(val title: String = "Settings"): Routes
     @Serializable data class ProfilePage(val title: String = "Profile"): Routes
     @Serializable data class ArticlesPage(val title: String = "Articles"): Routes
-    @Serializable data class FormPage(val title: String = "Forum"): Routes
+    @Serializable data class FormPage(val title: String = "Form"): Routes
     @Serializable data class SurveyPage(val title: String = "Survey"): Routes
 }
 
@@ -65,7 +65,7 @@ fun Navigation(
 
                 composable<Routes.FormPage> {
                     val args = it.toRoute<Routes.FormPage>()
-                    ForumPage(args.title)
+                    FormPage(args.title)
                 }
 
                 composable<Routes.SettingsPage> {

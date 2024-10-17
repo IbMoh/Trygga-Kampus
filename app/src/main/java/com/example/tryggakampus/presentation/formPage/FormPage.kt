@@ -6,7 +6,7 @@ import com.example.tryggakampus.presentation.component.PageContainer
 
 
 @Composable
-fun ForumPage(title: String) {
+fun FormPage(title: String) {
     PageContainer {
         Text(title)
     }
