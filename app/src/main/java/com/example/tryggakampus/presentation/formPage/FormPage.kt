@@ -1,4 +1,4 @@
-package com.example.tryggakampus.presentation.forumPage
+package com.example.tryggakampus.presentation.formPage
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
