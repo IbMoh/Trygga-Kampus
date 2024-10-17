@@ -14,6 +14,8 @@ import com.example.tryggakampus.presentation.profilePage.ProfilePage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPage
 import com.example.tryggakampus.presentation.articlesPage.ArticlesPage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel
+import com.example.tryggakampus.presentation.formPage.FormPage
+import com.example.tryggakampus.presentation.storiesPage.StoriesPage
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
 
 import kotlinx.serialization.Serializable
@@ -39,6 +41,18 @@ sealed interface Routes {
 
     @Serializable data class ArticlesPage(val title: String = "Articles"): Routes {
         override fun routeName() = "ArticlesPage"
+    }
+
+    @Serializable  data class FormPage(val title: String = "Form"): Routes {
+        override fun routeName() = "FormPage"
+    }
+
+    @Serializable data class StoriesPage(val title: String = "Stories"): Routes {
+        override fun routeName() = "StoriesPage"
+    }
+
+    @Serializable data class SurveyPage(val title: String = "Survey"): Routes {
+        override fun routeName() = "SurveyPage"
     }
 }
 
@@ -74,14 +88,20 @@ fun Navigation(
                     ArticlesPage(args.title)
                 }
 
-                composable<Routes.SettingsPage> {
-                    val args = it.toRoute<Routes.SurveyPage>()
-                    SurveyPage(args.title)
+                composable<Routes.FormPage> {
+                    val args = it.toRoute<Routes.FormPage>()
+                    FormPage(args.title)
                 }
+
 
                 composable<Routes.SurveyPage> {
                     val args = it.toRoute<Routes.SurveyPage>()
                     SurveyPage(args.title)
+                }
+
+                composable<Routes.StoriesPage> {
+                    StoriesPage()
+
                 }
 
                 composable<Routes.SettingsPage> {
@@ -89,6 +109,7 @@ fun Navigation(
                     val vm = viewModel<SettingsPageViewModel>()
                     SettingsPage(vm, args.title)
                 }
+
             }
         }
     }
