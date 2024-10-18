@@ -84,8 +84,7 @@ fun Navigation(
                 }
 
                 composable<Routes.ArticlesPage> {
-                    val args = it.toRoute<Routes.ArticlesPage>()
-                    ArticlesPage(args.title)
+                    ArticlesPage()
                 }
 
                 composable<Routes.FormPage> {
