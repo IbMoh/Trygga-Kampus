@@ -61,7 +61,7 @@ fun ArticleBox(article: ArticleModel, onClick: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
          ArticleBoxHeader(article.title?: "")
-         ArticleBoxBody(article.summary, article.webpage?: "Anonymous")
+         ArticleBoxBody(article.summary, article.webpage?: "No Link")
     }
 }
 
