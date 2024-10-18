@@ -12,12 +12,10 @@ interface StoryRepository {
     suspend fun getAllStories(source: Source): List<StoryModel>
 }
 
-
 object StoryRepositoryImpl: StoryRepository {
     private const val COLLECTION_NAME = "student-stories"
 
     override suspend fun getAllStories(source: Source): List<StoryModel> {
-        Log.d("FIRESTORE", "Fetching from Source.${source.name}")
         try {
             val result = Firebase.firestore
                 .collection(COLLECTION_NAME)
@@ -28,7 +26,6 @@ object StoryRepositoryImpl: StoryRepository {
                 document.toObject(StoryModel::class.java)
             }
         } catch (e: Exception) {
-            Log.d("FIRESTORE", "Failed to retrieve collection 'student-stories'")
             Log.d("FATAL", e.stackTraceToString())
             return emptyList()
         }

@@ -1,7 +1,6 @@
 package com.example.tryggakampus.presentation.storiesPage
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class StoriesPageViewModel(): ViewModel() {
+class StoriesPageViewModel: ViewModel() {
     var stories = mutableStateListOf<StoryModel>()
         private set
 
@@ -28,9 +27,7 @@ class StoriesPageViewModel(): ViewModel() {
                 .first()
 
             val currentTimeMillis = System.currentTimeMillis()
-
             val timeDifference = (currentTimeMillis - lastFetchTime) / 1000
-            Log.d("LOAD", "TimeDiff: $timeDifference , $currentTimeMillis - $lastFetchTime")
             val source = if (timeDifference >= 20) {
                 Source.SERVER
             } else {
@@ -38,7 +35,6 @@ class StoriesPageViewModel(): ViewModel() {
             }
 
             stories.addAll(StoryRepositoryImpl.getAllStories(source))
-            Log.d("LOAD", "stories: ${stories.size}, source: $source")
 
             if (source == Source.SERVER) {
                 updateStoriesFetchTime(context)
