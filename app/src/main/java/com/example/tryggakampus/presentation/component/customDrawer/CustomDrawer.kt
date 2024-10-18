@@ -45,7 +45,7 @@ fun CustomDrawer(
             DrawerActionBar(onCloseClick = onCloseClick)
             AppLogo()
             PrimaryDrawerItems(
-                drawerItems = drawerItems.take(5),
+                drawerItems = drawerItems.take(drawerItems.size - 1),
                 selectedItem = selectedDrawerItem,
                 onClickItem = onNavigationItemClick
             )
@@ -113,7 +113,7 @@ fun PrimaryDrawerItems(
                         DrawerItem.Home -> Routes.LandingPage()
                         DrawerItem.Profile -> Routes.ProfilePage()
                         DrawerItem.Articles -> Routes.ArticlesPage()
-                        DrawerItem.Form -> Routes.FormPage()
+                        DrawerItem.Forum -> Routes.FormPage()
                         DrawerItem.Survey -> Routes.SurveyPage()
                         DrawerItem.Stories -> Routes.StoriesPage()
                         else -> {}
