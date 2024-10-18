@@ -1,5 +1,6 @@
 package com.example.tryggakampus.presentation.storiesPage
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,8 +26,10 @@ import com.example.tryggakampus.domain.model.StoryModel
 
 @Composable
 fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel>()) {
+    val localContext = LocalContext.current
+
     LaunchedEffect(Unit) {
-        viewModel.loadStories()
+        viewModel.loadStories(localContext)
     }
 
     LazyColumn(
