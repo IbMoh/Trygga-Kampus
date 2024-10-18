@@ -60,12 +60,12 @@ fun FormPage(title: String) {
                     // Handle form submission logic here
                 },
                 modifier = Modifier
-                    .align(Alignment.End) // Align button to the end
-                    .size(width = 200.dp, height = 60.dp) // Make button larger
-                    .background(Color.Red), // Set the button background color to red
+                    .align(Alignment.End)
+                    .size(width = 200.dp, height = 60.dp)
+                    .background(Color.Red),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Red, // Set the container color to red
-                    contentColor = Color.White // Set the text color to white for contrast
+                    containerColor = Color.Red,
+                    contentColor = Color.White
                 )
             ) {
                 Text("Submit")
