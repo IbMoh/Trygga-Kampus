@@ -9,39 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.launch
 
-// ViewModel to manage login logic and state
-class LoginViewModel : ViewModel() {
-    var username by mutableStateOf("")
-        private set
-    var password by mutableStateOf("")
-        private set
-
-    fun onUsernameChange(newUsername: String) {
-        username = newUsername
-    }
-
-    fun onPasswordChange(newPassword: String) {
-        password = newPassword
-    }
-
-    fun onLogin(isStudent: Boolean) {
-        // Login logic can be implemented here
-        if (isStudent) {
-            println("Logging in as Student with Username: $username, Password: $password")
-        } else {
-            println("Logging in as Teacher with Username: $username, Password: $password")
-        }
-    }
-}
-
-// Main composable function for the LoginFeature
 @Composable
-fun LoginFeatureScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun LoginFeature(loginViewModel: LoginViewModel = viewModel()) {
+    val coroutineScope = rememberCoroutineScope()
     var isStudentLogin by remember { mutableStateOf(true) }
+    var loginResult by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -70,12 +46,19 @@ fun LoginFeatureScreen(loginViewModel: LoginViewModel = viewModel()) {
             onUsernameChange = loginViewModel::onUsernameChange,
             password = loginViewModel.password,
             onPasswordChange = loginViewModel::onPasswordChange,
-            onLogin = { loginViewModel.onLogin(isStudentLogin) }
+            onLogin = {
+                coroutineScope.launch {
+                    loginViewModel.onLogin(isStudentLogin)
+                    loginResult = loginViewModel.loginResult
+                }
+            }
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = loginResult)
     }
 }
 
-// Reusable composable for input fields and login button
 @Composable
 fun LoginFields(
     title: String,
@@ -112,9 +95,9 @@ fun LoginFields(
     }
 }
 
-// Preview function to visualize the LoginFeature
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginFeature() {
-    LoginFeatureScreen()
+    LoginFeature()
 }
