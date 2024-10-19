@@ -1,4 +1,4 @@
-package com.example.tryggakampus.presentation.dummyScreen
+package com.example.tryggakampus.presentation.advicePage
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import com.example.tryggakampus.presentation.component.PageContainer
 
 @Composable
-fun DummyScreen(title: String) {
+fun AdvicePage() {
     PageContainer {
-        Text(title)
+        Text("HELLO")
     }
 }

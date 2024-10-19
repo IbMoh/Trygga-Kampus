@@ -1,0 +1,17 @@
+<resources>
+    <!-- Preventive Steps Section -->
+    <string name="preventive_advice_title">Preventive Steps</string>
+    <string name="preventive_advice_1">Engage in regular physical activity to reduce stress and avoid unhealthy coping mechanisms.</string>
+    <string name="preventive_advice_2">Build a strong support network and communicate openly with friends and family.</string>
+    <string name="preventive_advice_3">Avoid environments where addictive substances are easily accessible.</string>
+    <string name="preventive_advice_4">Educate yourself about the risks and consequences of addiction.</string>
+    <string name="preventive_advice_5">Practice mindfulness and find healthy hobbies to stay balanced and focused.</string>
+
+    <!-- Helping a Friend Section -->
+    <string name="friend_advice_title">How to help my friend?</string>
+    <string name="friend_advice_1">Listen without judgment and offer a supportive environment for your friend to speak openly.</string>
+    <string name="friend_advice_2">Encourage your friend to seek professional help and offer to accompany them if needed.</string>
+    <string name="friend_advice_3">Avoid enabling the behavior and set healthy boundaries to protect both yourself and your friend.</string>
+    <string name="friend_advice_4">Be patient, as recovery is a process, and show consistent support over time.</string>
+    <string name="friend_advice_5">Provide information about local support groups or resources that can assist in recovery.</string>
+</resources>
