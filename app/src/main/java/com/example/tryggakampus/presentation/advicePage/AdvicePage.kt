@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tryggakampus.R
+import com.example.tryggakampus.domain.model.AdviceCategory
 
 
 import com.example.tryggakampus.domain.model.AdviceItem
@@ -18,11 +19,16 @@ import java.util.Locale.Category
 // you can then go back after selecting. The advice will be displayed by categories.
 @Composable
 fun AdvicePage() {
-    CategorySelectionScreen()
+    CategorySelectionScreen(
+        onCategorySelected = { selectedCategory ->
+            println("Selected Category: $selectedCategory")
+        }
+    )
+
 }
 
 @Composable
-fun CategorySelectionScreen() {
+fun CategorySelectionScreen(onCategorySelected: (AdviceCategory) -> Unit) {
     Column(
 
     ) {
@@ -34,10 +40,14 @@ fun CategorySelectionScreen() {
 
         CategoryCard(
             title = stringResource(id = R.string.preventive_advice_category_title),
+            image = R.drawable.mentalsupport,
+            onClick = { onCategorySelected(AdviceCategory.PREVENTION)}
         )
 
         CategoryCard(
             title = stringResource(id = R.string.support_advice_category_title),
+            image = R.drawable.support,
+            onClick = { onCategorySelected(AdviceCategory.SUPPORT)}
         )
 
 
