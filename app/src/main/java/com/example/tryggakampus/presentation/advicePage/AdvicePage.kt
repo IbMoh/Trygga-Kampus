@@ -12,9 +12,6 @@ import com.example.tryggakampus.R
 import com.example.tryggakampus.domain.model.AdviceCategory
 
 
-import com.example.tryggakampus.domain.model.AdviceItem
-import java.util.Locale.Category
-
 // idea is to have a "landing page" for the advice where you can pick in between 2 categories.
 // you can then go back after selecting. The advice will be displayed by categories.
 @Composable

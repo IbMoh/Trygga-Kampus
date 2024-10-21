@@ -8,5 +8,5 @@ enum class AdviceCategory {
 data class AdviceItem(
     val title: String,
     val text: String,
-    val imageRes: Int
+    val image: Int
 )
