@@ -1,6 +1,7 @@
 package com.example.tryggakampus.presentation.advicePage
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -21,14 +28,16 @@ import com.example.tryggakampus.R
 // import packages
 import com.example.tryggakampus.domain.model.AdviceItem
 
-
 // this is just how the layout of every card will be, regardless of what category they are part of
 @Composable
 fun AdviceCard(adviceItem: AdviceItem) {
+    var expand by remember { mutableStateOf(false)}
+    val maxLines = if (expand) Int.MAX_VALUE else 3
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(vertical = 8.dp)
     ) {
         Column(
             modifier = Modifier
@@ -50,7 +59,7 @@ fun AdviceCard(adviceItem: AdviceItem) {
             //title of the advice
             Text(
                 modifier = Modifier
-                    .padding(4.dp),
+                    .padding(vertical = 4.dp),
                 text = adviceItem.title,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -62,9 +71,23 @@ fun AdviceCard(adviceItem: AdviceItem) {
                 text = adviceItem.text,
                 style = MaterialTheme.typography.bodyMedium,
                 overflow = TextOverflow.Ellipsis,
+                maxLines = maxLines,
             )
 
             Spacer(modifier =  Modifier.height(4.dp))
+
+            //expand button and expand logic
+            if(!expand && adviceItem.text.length > 100){
+                Box(
+                   modifier = Modifier
+                       .fillMaxWidth(),
+                   contentAlignment = Alignment.Center,
+                ) {
+                    TextButton(onClick = {expand = true}) {
+                        Text("Read More")
+                    }
+                }
+            }
 
         }
     }
