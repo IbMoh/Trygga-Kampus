@@ -56,7 +56,9 @@ sealed interface Routes {
         override fun routeName() = "SurveyPage"
     }
 
-    @Serializable data object LoginFeature: Routes
+    @Serializable data object LoginFeature: Routes {
+        override fun routeName() = "LoginFeature"
+    }
 }
 
 @Composable
