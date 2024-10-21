@@ -14,7 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginFeature(loginViewModel: LoginViewModel = viewModel()) {
+fun LoginFeature() {
+    val loginViewModel: LoginViewModel = viewModel<LoginViewModel>()
     val coroutineScope = rememberCoroutineScope()
     var isStudentLogin by remember { mutableStateOf(true) }
     var loginResult by remember { mutableStateOf("") }

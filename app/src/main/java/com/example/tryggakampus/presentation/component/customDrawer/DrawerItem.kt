@@ -33,6 +33,10 @@ enum class DrawerItem(
         icon = R.drawable.baseline_articles_24,
         title = "Stories"
     ),
+    Login(
+        icon = R.drawable.baseline_articles_24,
+        title = "Login"
+    ),
     Settings(
         icon = R.drawable.baseline_settings_24,
         title = "Settings"
