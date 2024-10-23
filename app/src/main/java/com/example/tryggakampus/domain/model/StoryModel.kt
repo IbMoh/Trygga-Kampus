@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StoryModel(
-    var id: String = "1ab23c4tj1",
+    var id: String? = null,
     val title: String? = null,
 //    val userId: String,
     val author: String? = null,
