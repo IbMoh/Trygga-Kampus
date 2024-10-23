@@ -16,6 +16,7 @@ import com.example.tryggakampus.presentation.articlesPage.ArticlesPage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel
 import com.example.tryggakampus.presentation.formPage.FormPage
 import com.example.tryggakampus.presentation.storiesPage.StoriesPage
+import com.example.tryggakampus.presentation.storiesPage.StoriesPageViewModel
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
 
 import kotlinx.serialization.Serializable
@@ -99,7 +100,6 @@ fun Navigation(
 
                 composable<Routes.StoriesPage> {
                     StoriesPage()
-
                 }
 
                 composable<Routes.SettingsPage> {
