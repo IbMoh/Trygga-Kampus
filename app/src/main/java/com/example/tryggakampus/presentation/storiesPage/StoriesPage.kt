@@ -22,22 +22,71 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tryggakampus.domain.model.StoryModel
+enum class NewStoryFormState {
+    Opened,
+    Closed
+}
+
+fun NewStoryFormState.isOpened(): Boolean {
+    return this.name == "Opened"
+}
+
+fun NewStoryFormState.opposite(): NewStoryFormState {
+    return if (this == NewStoryFormState.Opened)
+        NewStoryFormState.Closed
+    else
+        NewStoryFormState.Opened
+}
 
 @Composable
 fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel>()) {
     val localContext = LocalContext.current
+    val (viewNewStoryForm, setViewNewStoryForm) = remember { mutableStateOf(NewStoryFormState.Closed) }
 
     LaunchedEffect(Unit) {
         viewModel.loadStories(localContext)
     }
 
-    LazyColumn(
-        modifier = Modifier.padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current.density
+
+    val screenWidth = remember {
+        derivedStateOf { (configuration.screenWidthDp * density).roundToInt() }
+    }
+    val offsetValue = remember { derivedStateOf { (screenWidth.value / 2).dp } }
+
+    val animatedOffset by animateDpAsState(
+        targetValue =
+            if (!viewModel.showNewStoryForm.value)
+                offsetValue.value
+            else
+                0.dp
+        ,
+        animationSpec = tween(
+            durationMillis = 200,
+            easing = FastOutSlowInEasing
+        ),
+        label = "Animated Offset"
+    )
+
+    Box(modifier = Modifier
+        .statusBarsPadding()
+        .navigationBarsPadding()
+        .fillMaxSize()
     ) {
-        items(viewModel.stories) { item: StoryModel ->
-            StoryBox(item, onClick = {})
+        LazyColumn(
+            modifier = Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            items(viewModel.stories) { item: StoryModel ->
+                StoryBox(item, onClick = {})
+            }
         }
+
+        NewStoryPage(
+            viewModel = viewModel,
+            modifier = Modifier.offset(x = animatedOffset)
+        )
     }
 }
 
@@ -53,7 +102,12 @@ fun StoryBox(story: StoryModel, onClick: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         StoryBoxHeader(story.title?: "", story.author?: "Anonymous")
-        StoryBoxBody(story.content)
+        StoryBoxBody(
+            if (story.content.length > 200)
+                story.content.substring(0, 200) + "..."
+            else
+                story.content
+        )
     }
 }
 

@@ -18,6 +18,9 @@ class StoriesPageViewModel: ViewModel() {
     var stories = mutableStateListOf<StoryModel>()
         private set
 
+    var showNewStoryForm = mutableStateOf<Boolean>(false)
+        private set
+
     fun loadStories(context: Context) {
         viewModelScope.launch {
             stories.clear()
