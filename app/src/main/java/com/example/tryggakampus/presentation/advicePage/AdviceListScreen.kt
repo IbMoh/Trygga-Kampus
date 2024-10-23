@@ -13,6 +13,7 @@ import com.example.tryggakampus.R
 
 import com.example.tryggakampus.domain.model.AdviceItem
 
+// this is the screen that will show each card related to the category picked
 @Composable
 fun AdviceListScreen(title: String, adviceItems: List<AdviceItem>, onBack: () -> Unit) {
     Column(

@@ -10,7 +10,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.tryggakampus.R
 import com.example.tryggakampus.domain.model.AdviceCategory
-import com.example.tryggakampus.domain.model.AdviceItem
 
 // idea is to have a "landing page" for the advice where you can pick in between 2 categories.
 // you can then go back after selecting. The advice will be displayed by categories.
@@ -20,25 +19,13 @@ fun AdvicePage() {
 
     when (selectedCategory) {
         AdviceCategory.PREVENTION -> AdviceListScreen(
-            title = stringResource(id = R.string.preventive_advice_title),
-            adviceItems = listOf(
-                AdviceItem(
-                    title = stringResource(id = R.string.preventive_advice_title),
-                    text = stringResource(id = R.string.preventive_advice_text),
-                    image = R.drawable.mentalsupport
-                )
-            ),
+            title = stringResource(id = R.string.preventive_advice_category_title),
+            adviceItems = getPreventiveAdviceItems(),
             onBack = { selectedCategory = null }
         )
         AdviceCategory.SUPPORT -> AdviceListScreen(
             title = stringResource(id = R.string.support_advice_category_title),
-            adviceItems = listOf(
-                AdviceItem(
-                    title = stringResource(id = R.string.support_advice_title),
-                    text = stringResource(id = R.string.support_advice_text),
-                    image = R.drawable.support
-                )
-            ),
+            adviceItems = getSupportAdviceItems(),
             onBack = { selectedCategory = null }
         )
         null -> CategorySelectionScreen(onCategorySelected = { selectedCategory = it })
@@ -47,9 +34,7 @@ fun AdvicePage() {
 
 @Composable
 fun CategorySelectionScreen(onCategorySelected: (AdviceCategory) -> Unit) {
-    Column(
-
-    ) {
+    Column {
         Text(
             text = "Select Category",
             style = MaterialTheme.typography.titleLarge,
@@ -59,16 +44,14 @@ fun CategorySelectionScreen(onCategorySelected: (AdviceCategory) -> Unit) {
         CategoryCard(
             title = stringResource(id = R.string.preventive_advice_category_title),
             image = R.drawable.mentalsupport,
-            onClick = { onCategorySelected(AdviceCategory.PREVENTION)}
+            onClick = { onCategorySelected(AdviceCategory.PREVENTION) }
         )
 
         CategoryCard(
             title = stringResource(id = R.string.support_advice_category_title),
             image = R.drawable.support,
-            onClick = { onCategorySelected(AdviceCategory.SUPPORT)}
+            onClick = { onCategorySelected(AdviceCategory.SUPPORT) }
         )
-
-
     }
 }
 
