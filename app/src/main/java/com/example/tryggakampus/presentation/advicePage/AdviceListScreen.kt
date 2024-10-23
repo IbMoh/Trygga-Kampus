@@ -21,12 +21,18 @@ fun AdviceListScreen(title: String, adviceItems: List<AdviceItem>, onBack: () ->
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TextButton(
+        OutlinedButton(
             onClick = onBack,
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            shape = MaterialTheme.shapes.small,
+            border = ButtonDefaults.outlinedButtonBorder
         ) {
             Text("Back")
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
