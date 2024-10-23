@@ -40,14 +40,23 @@ fun NewStoryPage(modifier: Modifier, viewModel: StoriesPageViewModel) {
         .background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Text(stringResource(R.string.stories_title), fontSize = 20.sp)
+        Text(stringResource(R.string.stories_page_title), fontSize = 20.sp)
         Column (modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
+                value = viewModel.storyTitleValue.value,
+                label = { Text(stringResource(R.string.stories_title_label)) },
+                onValueChange = { viewModel.setStoryTitleValue(it) }
+            )
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 value = viewModel.storyFormValue.value,
-                label = { Text(stringResource(R.string.stories_input_label)) },
+                label = { Text(stringResource(R.string.stories_content_label)) },
                 onValueChange = { viewModel.setStoryFormValue(it) },
                 minLines = 5,
                 maxLines = 8

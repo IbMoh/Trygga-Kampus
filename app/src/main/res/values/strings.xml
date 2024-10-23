@@ -17,8 +17,9 @@
     </string>
 
     <!-- Stories Begin -->
-    <string name="stories_title">Share your story with others</string>
-    <string name="stories_input_label">What would you like to share?</string>
+    <string name="stories_page_title">Share your story with others</string>
+    <string name="stories_title_label">Title (Optional)</string>
+    <string name="stories_content_label">What would you like to share?</string>
     <string name="stories_anonymous_label">Anonymous</string>
     <!-- Stories End -->
 </resources>

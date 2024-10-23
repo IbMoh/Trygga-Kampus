@@ -1,5 +1,6 @@
 package com.example.tryggakampus.presentation.storiesPage
 
+import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -99,7 +100,7 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(viewModel.stories) { item: StoryModel ->
-                StoryBox(item, onClick = {})
+                StoryBox(item, onClick = { Log.d("STORY", item.id.toString() )})
             }
         }
 

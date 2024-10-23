@@ -118,7 +118,7 @@ fun BottomStoriesBar() {
         }
 
         IconButton(
-            onClick = { vm.setShowNewStoryForm(!vm.showNewStoryForm.value) },
+            onClick = { vm.submitStory() },
             enabled = (
                 vm.storyFormValue.value.text.length >= Config.Stories.minLength &&
                 vm.storyFormValue.value.text.length <= Config.Stories.maxLength

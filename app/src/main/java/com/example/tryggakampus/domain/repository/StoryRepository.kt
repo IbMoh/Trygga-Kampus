@@ -12,11 +12,11 @@ import kotlinx.coroutines.tasks.await
 interface StoryRepository {
     suspend fun getAllStories(source: Source): List<StoryModel>
     suspend fun postStory(
-        userId: String,
+        // userId: String,
         title: String?,
         content: String,
         isAnonymous: Boolean? = true
-    ): Boolean
+    ): StoryModel?
 }
 
 object StoryRepositoryImpl: StoryRepository {
@@ -42,13 +42,13 @@ object StoryRepositoryImpl: StoryRepository {
     }
 
     override suspend fun postStory(
-        userId: String,
+        // userId: String,
         title: String?,
         content: String,
         isAnonymous: Boolean?
-    ): Boolean {
+    ): StoryModel? {
         try {
-            Firebase.firestore.collection(COLLECTION_NAME).add(
+            val result = Firebase.firestore.collection(COLLECTION_NAME).add(
                 StoryModel(
                     //userId = userId,
                     title = title,
@@ -57,10 +57,10 @@ object StoryRepositoryImpl: StoryRepository {
                 )
             ).await()
 
-            return true
+            return result.get().await().toObject(StoryModel::class.java)
         } catch (e: Exception) {
             Log.d("FATAL", e.stackTraceToString())
-            return false
+            return null
         }
     }
 }

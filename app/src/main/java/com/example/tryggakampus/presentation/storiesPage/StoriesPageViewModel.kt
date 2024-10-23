@@ -27,6 +27,7 @@ class StoriesPageViewModel: ViewModel() {
         private set
 
     var storyFormValue = mutableStateOf(TextFieldValue(""))
+    var storyTitleValue = mutableStateOf(TextFieldValue(""))
 
     fun setShowNewStoryForm(b: Boolean) {
         showNewStoryForm.value = b
@@ -36,8 +37,26 @@ class StoriesPageViewModel: ViewModel() {
         storyFormValue.value = textFieldValue
     }
 
+    fun setStoryTitleValue(textFieldValue: TextFieldValue) {
+        storyTitleValue.value = textFieldValue
+    }
+
     fun submitStory() {
-        // StoryRepositoryImpl.postStory()
+        viewModelScope.launch {
+            val story = StoryRepositoryImpl.postStory(
+                title = storyTitleValue.value.text,
+                content = storyFormValue.value.text,
+                isAnonymous = true
+            )
+
+            story?.let {
+                stories.add(0, story)
+            }
+
+            setStoryTitleValue(TextFieldValue())
+            setStoryFormValue(TextFieldValue())
+            setShowNewStoryForm(false)
+        }
     }
 
     fun loadStories(context: Context) {
