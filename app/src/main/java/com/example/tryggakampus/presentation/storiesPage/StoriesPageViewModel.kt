@@ -1,13 +1,18 @@
 package com.example.tryggakampus.presentation.storiesPage
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tryggakampus.dataStore
 import com.example.tryggakampus.domain.model.StoryModel
+import com.example.tryggakampus.domain.repository.StoryRepository
 import com.example.tryggakampus.domain.repository.StoryRepositoryImpl
 import com.google.firebase.firestore.Source
 import kotlinx.coroutines.flow.first
@@ -20,6 +25,20 @@ class StoriesPageViewModel: ViewModel() {
 
     var showNewStoryForm = mutableStateOf<Boolean>(false)
         private set
+
+    var storyFormValue = mutableStateOf(TextFieldValue(""))
+
+    fun setShowNewStoryForm(b: Boolean) {
+        showNewStoryForm.value = b
+    }
+
+    fun setStoryFormValue(textFieldValue: TextFieldValue) {
+        storyFormValue.value = textFieldValue
+    }
+
+    fun submitStory() {
+        // StoryRepositoryImpl.postStory()
+    }
 
     fun loadStories(context: Context) {
         viewModelScope.launch {
@@ -38,6 +57,7 @@ class StoriesPageViewModel: ViewModel() {
             }
 
             stories.addAll(StoryRepositoryImpl.getAllStories(source))
+            Log.d("STORIES", stories.toList().toString())
 
             if (source == Source.SERVER) {
                 updateStoriesFetchTime(context)
