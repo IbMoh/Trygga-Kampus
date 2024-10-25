@@ -4,6 +4,7 @@
     <!-- Category Titles -->
     <string name="preventive_advice_category_title">Preventive Advice</string>
     <string name="support_advice_category_title">Helping a Friend</string>
+    <string name="family_advice_category_title">Talking to My Family About My Addictions</string>
 
     <!-- Preventive Advice Cards -->
     <string name="preventive_advice_title_1">
@@ -91,6 +92,47 @@
         If your friend is struggling, gently encourage them to seek help from a
         counselor, therapist, or support group. Offer to accompany them to make the
         process less intimidating.
+    </string>
+
+    <!-- Family Advice Cards -->
+    <string name="family_advice_title_1">
+        Prepare What You Want to Say
+    </string>
+    <string name="family_advice_text_1">
+        Take time to reflect on what you want to communicate to your family. Be honest
+        about your struggles and explain how their support can make a difference.
+    </string>
+
+    <string name="family_advice_title_2">
+        Choose the Right Moment
+    </string>
+    <string name="family_advice_text_2">
+        Find a calm, private setting where you can speak openly without distractions.
+        Make sure it’s a time when your family members are available and receptive to talking.
+    </string>
+
+    <string name="family_advice_title_3">
+        Express Your Feelings
+    </string>
+    <string name="family_advice_text_3">
+        Share how your addiction has affected you emotionally and physically.
+        Let your family know how you feel and why you’re seeking their understanding and help.
+    </string>
+
+    <string name="family_advice_title_4">
+        Be Open to Their Reactions
+    </string>
+    <string name="family_advice_text_4">
+        Your family may have a range of emotions, from concern to confusion. Be patient
+        and open to their reactions, and let them ask questions so they can better understand your situation.
+    </string>
+
+    <string name="family_advice_title_5">
+        Ask for Their Support
+    </string>
+    <string name="family_advice_text_5">
+        Let your family know how they can support you, whether it’s attending counseling sessions with you,
+        helping you find resources, or simply being there to listen. Show appreciation for their willingness to help.
     </string>
 
 </resources>

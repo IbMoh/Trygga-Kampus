@@ -2,7 +2,8 @@ package com.example.tryggakampus.domain.model
 
 enum class AdviceCategory {
     PREVENTION,
-    SUPPORT
+    SUPPORT,
+    FAMILY
 }
 
 data class AdviceItem(

@@ -28,6 +28,11 @@ fun AdvicePage() {
             adviceItems = getSupportAdviceItems(),
             onBack = { selectedCategory = null }
         )
+        AdviceCategory.FAMILY -> AdviceListScreen(
+            title = stringResource(id = R.string.family_advice_category_title),
+            adviceItems = getFamilyAdviceItems(),
+            onBack = { selectedCategory = null }
+        )
         null -> CategorySelectionScreen(onCategorySelected = { selectedCategory = it })
     }
 }
@@ -51,6 +56,12 @@ fun CategorySelectionScreen(onCategorySelected: (AdviceCategory) -> Unit) {
             title = stringResource(id = R.string.support_advice_category_title),
             image = R.drawable.support,
             onClick = { onCategorySelected(AdviceCategory.SUPPORT) }
+        )
+
+        CategoryCard(
+            title = stringResource(id = R.string.family_advice_category_title),
+            image = R.drawable.familysupport,
+            onClick = { onCategorySelected(AdviceCategory.FAMILY) }
         )
     }
 }
