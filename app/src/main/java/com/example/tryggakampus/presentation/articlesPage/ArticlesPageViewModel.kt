@@ -1,6 +1,7 @@
 package com.example.tryggakampus.presentation.articlesPage
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -9,10 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.tryggakampus.dataStore
 import com.example.tryggakampus.domain.model.ArticleModel
 import com.example.tryggakampus.domain.repository.ArticleRepositoryImpl
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class ArticlesPageViewModel: ViewModel() {
     var articles = mutableStateListOf<ArticleModel>()
@@ -49,4 +53,19 @@ class ArticlesPageViewModel: ViewModel() {
             settings[lastFetchTimeKey] = System.currentTimeMillis()
         }
     }
+
+    fun addArticle(title: String, summary: String, webpage: String) {
+        viewModelScope.launch {
+                val newArticle = ArticleModel(
+                    id = UUID.randomUUID().toString(),
+                    title = title,
+                    summary = summary,
+                    webpage = webpage
+                )
+            ArticleRepositoryImpl.addArticle(newArticle)
+            articles.add(newArticle)
+        }
+    }
+
 }
+
