@@ -3,7 +3,6 @@ package com.example.tryggakampus.domain.repository
 import android.util.Log
 import com.example.tryggakampus.domain.model.ArticleModel
 import com.google.firebase.firestore.Source
-
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
