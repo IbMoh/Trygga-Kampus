@@ -33,9 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -126,17 +129,15 @@ fun ArticleBoxBody(content: String, webpage: String) {
     ) {
         Text(content, fontSize = 16.sp)
 
-        ClickableText(
-            text = AnnotatedString("Read More"),
-            style = TextStyle(
-                color = Color(0xFFF19107),
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp
-            ),
-            onClick = {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(webpage))
-                context.startActivity(intent)
+        Text(
+            buildAnnotatedString {
+                withLink(LinkAnnotation.Url(url = webpage)) {
+                    append("Read More")
+                }
             },
+            color = Color(0xFFF19107),
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
             modifier = Modifier.padding(top = 8.dp)
         )
     }
