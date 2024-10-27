@@ -144,12 +144,26 @@ fun MainContent(
             BottomAppBar()
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            page()
+        Box() {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                page()
+            }
+
+            if (drawerState == CustomDrawerState.Opened) {
+                Column (
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.08f))
+                        .clickable {
+                            onDrawerClick(CustomDrawerState.Closed)
+                    },
+                    content = {}
+                )
+            }
         }
     }
 }
