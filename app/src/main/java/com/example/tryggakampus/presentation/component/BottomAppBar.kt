@@ -1,5 +1,12 @@
 package com.example.tryggakampus.presentation.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -7,16 +14,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -49,7 +62,7 @@ fun BottomAppBar() {
     when (className) {
         Routes.SettingsPage().routeName() -> BottomAppBar { BottomSettingsBar() }
         Routes.StoriesNavGraph.StoriesPage.routeName() -> BottomAppBar { BottomStoriesBar() }
-        Routes.StoriesNavGraph.StoryPage().routeName() -> BottomAppBar { BottomStoryBar() }
+        // Routes.StoriesNavGraph.StoryPage().routeName() -> BottomAppBar { BottomStoryBar() }
         // Routes.ArticlesPage().routeName() -> BottomAppBar { BottomArticlesBar() }
         // Routes.LandingPage().routeName() -> BottomAppBar { BottomLandingBar() }
         // Routes.ProfilePage().routeName() -> BottomAppBar { BottomProfileBar() }
@@ -100,35 +113,48 @@ fun BottomStoriesBar() {
 
     val vm: StoriesPageViewModel = viewModel(navigationGraphEntry)
 
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-        IconButton(
-            modifier = Modifier
-                .clip(shape = RoundedCornerShape(size = 50.dp))
-                .background(
-                    if (vm.showNewStoryForm.value)
-                        MaterialTheme.colorScheme.error
-                    else
-                        Color.Transparent
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        Row (
+            modifier = Modifier.animateContentSize(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),
+                    contentColor = MaterialTheme.colorScheme.inverseSurface
                 ),
-            onClick = { vm.setShowNewStoryForm(!vm.showNewStoryForm.value) }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Write a new story"
-            )
-        }
+                onClick = { vm.setShowNewStoryForm(!vm.showNewStoryForm.value) }
+            ) {
+                val text = if (!vm.showNewStoryForm.value) "Add a story" else "Cancel"
+                Icon(
+                    imageVector = if (!vm.showNewStoryForm.value) Icons.Default.Add else Icons.Default.Close,
+                    contentDescription = text
+                )
+                Text(text)
+            }
 
-        IconButton(
-            onClick = { vm.submitStory() },
-            enabled = (
-                vm.storyFormValue.value.text.length >= Config.Stories.minLength &&
-                vm.storyFormValue.value.text.length <= Config.Stories.maxLength
-            )
-        ) {
-            Icon(
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = "Submit your story"
-            )
+            AnimatedVisibility(
+                visible = vm.showNewStoryForm.value,
+                enter = fadeIn() + slideInHorizontally(),
+                exit = fadeOut()
+            ) {
+                Button(
+                    onClick = { vm.submitStory() },
+                    enabled = (
+                        vm.storyFormValue.value.text.length >= Config.Stories.minLength &&
+                        vm.storyFormValue.value.text.length <= Config.Stories.maxLength
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.PlayArrow,
+                        contentDescription = "Submit your story"
+                    )
+                    Text("Submit")
+                }
+            }
         }
     }
 }
