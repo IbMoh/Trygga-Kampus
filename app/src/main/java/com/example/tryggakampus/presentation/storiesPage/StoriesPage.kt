@@ -1,12 +1,10 @@
 package com.example.tryggakampus.presentation.storiesPage
 
-import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,42 +25,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tryggakampus.LocalNavController
+import com.example.tryggakampus.Routes
 import com.example.tryggakampus.domain.model.StoryModel
-import com.example.tryggakampus.presentation.component.customDrawer.CustomDrawerState
-import com.example.tryggakampus.presentation.component.customDrawer.isOpened
 import kotlin.math.roundToInt
-
-enum class NewStoryFormState {
-    Opened,
-    Closed
-}
-
-fun NewStoryFormState.isOpened(): Boolean {
-    return this.name == "Opened"
-}
-
-fun NewStoryFormState.opposite(): NewStoryFormState {
-    return if (this == NewStoryFormState.Opened)
-        NewStoryFormState.Closed
-    else
-        NewStoryFormState.Opened
-}
 
 @Composable
 fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel>()) {
     val localContext = LocalContext.current
-    val (viewNewStoryForm, setViewNewStoryForm) = remember { mutableStateOf(NewStoryFormState.Closed) }
+    val navigator = LocalNavController.current
 
     LaunchedEffect(Unit) {
         viewModel.loadStories(localContext)
@@ -74,7 +54,7 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
     val screenWidth = remember {
         derivedStateOf { (configuration.screenWidthDp * density).roundToInt() }
     }
-    val offsetValue = remember { derivedStateOf { (screenWidth.value / 2).dp } }
+    val offsetValue = remember { derivedStateOf { (screenWidth.value).dp } }
 
     val animatedOffset by animateDpAsState(
         targetValue =
@@ -100,7 +80,9 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(viewModel.stories) { item: StoryModel ->
-                StoryBox(item, onClick = { Log.d("STORY", item.id.toString() )})
+                StoryBox(item, short = true, onClick = {
+                    navigator.navigate(Routes.StoriesNavGraph.StoryPage(item.id!!))
+                })
             }
         }
 
@@ -112,7 +94,7 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
 }
 
 @Composable
-fun StoryBox(story: StoryModel, onClick: () -> Unit) {
+fun StoryBox(story: StoryModel, short: Boolean? = false, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .clip(shape = RoundedCornerShape(10.dp))
@@ -124,7 +106,7 @@ fun StoryBox(story: StoryModel, onClick: () -> Unit) {
     ) {
         StoryBoxHeader(story.title?: "", story.author?: "Anonymous")
         StoryBoxBody(
-            if (story.content.length > 200)
+            if (story.content.length > 200 && short == true)
                 story.content.substring(0, 200) + "..."
             else
                 story.content

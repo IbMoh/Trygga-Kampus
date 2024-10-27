@@ -6,15 +6,19 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
+
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.example.tryggakampus.dataStore
 import com.example.tryggakampus.domain.model.StoryModel
-import com.example.tryggakampus.domain.repository.StoryRepository
 import com.example.tryggakampus.domain.repository.StoryRepositoryImpl
+
 import com.google.firebase.firestore.Source
+
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -28,6 +32,8 @@ class StoriesPageViewModel: ViewModel() {
 
     var storyFormValue = mutableStateOf(TextFieldValue(""))
     var storyTitleValue = mutableStateOf(TextFieldValue(""))
+    var storyAnonymity = mutableStateOf<Boolean>(true)
+        private set
 
     fun setShowNewStoryForm(b: Boolean) {
         showNewStoryForm.value = b
@@ -41,12 +47,16 @@ class StoriesPageViewModel: ViewModel() {
         storyTitleValue.value = textFieldValue
     }
 
+    fun setStoryAnonymity(b: Boolean) {
+        storyAnonymity.value = b
+    }
+
     fun submitStory() {
         viewModelScope.launch {
             val story = StoryRepositoryImpl.postStory(
                 title = storyTitleValue.value.text,
                 content = storyFormValue.value.text,
-                isAnonymous = true
+                isAnonymous = storyAnonymity.value
             )
 
             story?.let {
@@ -56,6 +66,7 @@ class StoriesPageViewModel: ViewModel() {
             setStoryTitleValue(TextFieldValue())
             setStoryFormValue(TextFieldValue())
             setShowNewStoryForm(false)
+            setStoryAnonymity(true)
         }
     }
 

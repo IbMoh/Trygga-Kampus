@@ -76,7 +76,9 @@ fun NewStoryPage(modifier: Modifier, viewModel: StoriesPageViewModel) {
                     else
                         Color.Unspecified
 
-                SwitchWithIconExample(stringResource(R.string.stories_anonymous_label))
+                SwitchWithIcon(stringResource(R.string.stories_anonymous_label), onToggle = {
+                    viewModel.setStoryAnonymity(it)
+                })
 
                 if (textLength < Config.Stories.minLength) {
                     Text("Minimum $textLength / ${Config.Stories.minLength}", color = color)
@@ -89,7 +91,7 @@ fun NewStoryPage(modifier: Modifier, viewModel: StoriesPageViewModel) {
 }
 
 @Composable
-fun SwitchWithIconExample(label: String) {
+fun SwitchWithIcon(label: String, onToggle: (b: Boolean) -> Unit) {
     var checked by remember { mutableStateOf(true) }
 
     Row(
@@ -99,7 +101,7 @@ fun SwitchWithIconExample(label: String) {
         Text(label)
         Switch(
             checked = checked,
-            onCheckedChange = { checked = it },
+            onCheckedChange = { checked = it; onToggle(it) },
             thumbContent = {
                 Icon(
                     imageVector = if (checked) Icons.Filled.Check else Icons.Filled.Close,

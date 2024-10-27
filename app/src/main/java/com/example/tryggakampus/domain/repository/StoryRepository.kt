@@ -57,7 +57,9 @@ object StoryRepositoryImpl: StoryRepository {
                 )
             ).await()
 
-            return result.get().await().toObject(StoryModel::class.java)
+            return result.get().await().toObject(StoryModel::class.java)?.apply {
+                this.id = result.id
+            }
         } catch (e: Exception) {
             Log.d("FATAL", e.stackTraceToString())
             return null

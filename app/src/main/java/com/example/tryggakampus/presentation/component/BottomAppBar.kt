@@ -48,7 +48,8 @@ fun BottomAppBar() {
 
     when (className) {
         Routes.SettingsPage().routeName() -> BottomAppBar { BottomSettingsBar() }
-        Routes.StoriesPage().routeName() -> BottomAppBar { BottomStoriesBar() }
+        Routes.StoriesNavGraph.StoriesPage.routeName() -> BottomAppBar { BottomStoriesBar() }
+        Routes.StoriesNavGraph.StoryPage().routeName() -> BottomAppBar { BottomStoryBar() }
         // Routes.ArticlesPage().routeName() -> BottomAppBar { BottomArticlesBar() }
         // Routes.LandingPage().routeName() -> BottomAppBar { BottomLandingBar() }
         // Routes.ProfilePage().routeName() -> BottomAppBar { BottomProfileBar() }
@@ -94,7 +95,7 @@ fun BottomStoriesBar() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
 
     val navigationGraphEntry = remember(currentBackStackEntry) {
-        navController.getBackStackEntry(Routes.StoriesPage())
+        navController.getBackStackEntry(Routes.StoriesNavGraph.StoriesPage)
     }
 
     val vm: StoriesPageViewModel = viewModel(navigationGraphEntry)
@@ -127,6 +128,38 @@ fun BottomStoriesBar() {
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
                 contentDescription = "Submit your story"
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomStoryBar() {
+    val navController = LocalNavController.current
+
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val navigationGraphEntry = remember(currentBackStackEntry) {
+        navController.getBackStackEntry(Routes.StoriesNavGraph.StoriesPage)
+    }
+
+    val vm: StoriesPageViewModel = viewModel(navigationGraphEntry)
+
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+        IconButton(
+            modifier = Modifier
+                .clip(shape = RoundedCornerShape(size = 50.dp))
+                .background(
+                    if (vm.showNewStoryForm.value)
+                        MaterialTheme.colorScheme.error
+                    else
+                        Color.Transparent
+                ),
+            onClick = { vm.setShowNewStoryForm(!vm.showNewStoryForm.value) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Write a new story"
             )
         }
     }
