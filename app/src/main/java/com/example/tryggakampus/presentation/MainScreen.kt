@@ -144,7 +144,7 @@ fun MainContent(
             BottomAppBar()
         }
     ) { padding ->
-        Box() {
+        Box {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
