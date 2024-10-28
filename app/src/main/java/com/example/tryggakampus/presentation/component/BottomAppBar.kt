@@ -78,8 +78,8 @@ fun BottomSettingsBar() {
 
     BottomAppBar(
         modifier = Modifier
-            .padding(10.dp)
-            .clip(shape = RoundedCornerShape(10.dp)),
+            .clip(shape = RoundedCornerShape(10.dp))
+            .padding(10.dp),
         containerColor = MaterialTheme.colorScheme.primary
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
@@ -125,7 +125,7 @@ fun BottomStoriesBar() {
 
     BottomAppBar(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(horizontal = 10.dp)
             .clip(shape = RoundedCornerShape(10.dp)),
         containerColor = MaterialTheme.colorScheme.primary
     ) {
