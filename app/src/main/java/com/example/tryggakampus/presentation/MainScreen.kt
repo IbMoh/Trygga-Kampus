@@ -81,8 +81,7 @@ fun MainScreen(
 
     Box(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f))
+            .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .navigationBarsPadding()
             .fillMaxSize()
@@ -160,7 +159,7 @@ fun MainContent(
                         .background(Color.Black.copy(alpha = 0.08f))
                         .clickable {
                             onDrawerClick(CustomDrawerState.Closed)
-                    },
+                        },
                     content = {}
                 )
             }
