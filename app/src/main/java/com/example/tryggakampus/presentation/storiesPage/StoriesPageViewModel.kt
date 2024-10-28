@@ -35,6 +35,13 @@ class StoriesPageViewModel: ViewModel() {
     var storyAnonymity = mutableStateOf<Boolean>(true)
         private set
 
+    var loadingStories = mutableStateOf(true)
+        private set
+
+    private fun setLoadingStories(b: Boolean) {
+        loadingStories.value = b
+    }
+
     fun setShowNewStoryForm(b: Boolean) {
         showNewStoryForm.value = b
     }
@@ -72,6 +79,8 @@ class StoriesPageViewModel: ViewModel() {
 
     fun loadStories(context: Context) {
         viewModelScope.launch {
+            setLoadingStories(true)
+
             stories.clear()
             val lastFetchTimeKey = longPreferencesKey("stories_last_fetch_time")
             val lastFetchTime: Long = context.dataStore.data
@@ -92,6 +101,8 @@ class StoriesPageViewModel: ViewModel() {
             if (source == Source.SERVER) {
                 updateStoriesFetchTime(context)
             }
+
+            setLoadingStories(false)
         }
     }
 
