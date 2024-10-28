@@ -23,6 +23,7 @@ import com.example.tryggakampus.presentation.formPage.FormPage
 import com.example.tryggakampus.presentation.storiesPage.StoriesPage
 import com.example.tryggakampus.presentation.storiesPage.StoriesPageViewModel
 import com.example.tryggakampus.presentation.storiesPage.StoryPage
+import com.example.tryggakampus.presentation.advicePage.AdvicePage
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
 
 import kotlinx.serialization.Serializable
@@ -62,6 +63,10 @@ sealed interface Routes {
         @Serializable data class StoryPage(val storyModelId: String = "n07f0und"): Routes {
             override fun routeName() = "StoryPage"
         }
+    }
+
+    @Serializable data class AdvicePage(val title: String = "Advice"): Routes {
+        override fun routeName() = "AdvicePage"
     }
 
     @Serializable data class SurveyPage(val title: String = "Survey"): Routes {
@@ -129,6 +134,10 @@ fun Navigation(
                         val args = it.toRoute<Routes.StoriesNavGraph.StoryPage>()
                         StoryPage(vm, args.storyModelId)
                     }
+                }
+
+                composable<Routes.AdvicePage> {
+                    AdvicePage()
                 }
 
                 composable<Routes.SettingsPage> {
