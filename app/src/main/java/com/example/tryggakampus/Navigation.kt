@@ -16,6 +16,7 @@ import com.example.tryggakampus.presentation.articlesPage.ArticlesPage
 import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel
 import com.example.tryggakampus.presentation.formPage.FormPage
 import com.example.tryggakampus.presentation.storiesPage.StoriesPage
+import com.example.tryggakampus.presentation.advicePage.AdvicePage
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
 import com.example.tryggakampus.presentation.loginfeature.LoginFeature
 
@@ -50,6 +51,10 @@ sealed interface Routes {
 
     @Serializable data class StoriesPage(val title: String = "Stories"): Routes {
         override fun routeName() = "StoriesPage"
+    }
+
+    @Serializable data class AdvicePage(val title: String = "Advice"): Routes {
+        override fun routeName() = "AdvicePage"
     }
 
     @Serializable data class SurveyPage(val title: String = "Survey"): Routes {
@@ -105,6 +110,10 @@ fun Navigation(
                 composable<Routes.StoriesPage> {
                     StoriesPage()
 
+                }
+
+                composable<Routes.AdvicePage> {
+                    AdvicePage()
                 }
 
                 composable<Routes.SettingsPage> {
