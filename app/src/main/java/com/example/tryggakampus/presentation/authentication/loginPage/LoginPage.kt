@@ -1,4 +1,4 @@
-package com.example.tryggakampus.presentation.loginfeature
+package com.example.tryggakampus.presentation.authentication.loginPage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.tooling.preview.Preview
-import kotlinx.coroutines.launch
-import kotlin.math.log
+import com.example.tryggakampus.LocalNavController
+import com.example.tryggakampus.Routes
 
 @Composable
-fun LoginFeature() {
+fun LoginPage() {
     val loginViewModel: LoginViewModel = viewModel<LoginViewModel>()
     var isStudentLogin by remember { mutableStateOf(true) }
 
@@ -97,6 +97,8 @@ fun LoginFields(
     passwordIsValid: Boolean,
     onRequestLogin: () -> Unit
 ) {
+    val navController = LocalNavController.current
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = title)
         Spacer(modifier = Modifier.height(16.dp))
@@ -157,7 +159,18 @@ fun LoginFields(
             ),
             enabled = (emailIsValid && passwordIsValid)
         ) {
-            Text("Login")
+            Text("Sign In")
+        }
+
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Need an account?")
+            Button(onClick = { navController.navigate(Routes.Authentication.RegisterPage) }) {
+                Text(text = "Sign Up", color = MaterialTheme.colorScheme.onPrimary)
+            }
         }
     }
 }
@@ -182,5 +195,5 @@ fun LoadingIndicator() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewLoginFeature() {
-    LoginFeature()
+    LoginPage()
 }

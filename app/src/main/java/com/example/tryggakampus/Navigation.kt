@@ -1,6 +1,7 @@
 package com.example.tryggakampus
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -9,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.example.tryggakampus.presentation.landingPage.LandingPage
 import com.example.tryggakampus.presentation.profilePage.ProfilePage
@@ -19,7 +21,8 @@ import com.example.tryggakampus.presentation.formPage.FormPage
 import com.example.tryggakampus.presentation.storiesPage.StoriesPage
 import com.example.tryggakampus.presentation.advicePage.AdvicePage
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
-import com.example.tryggakampus.presentation.loginfeature.LoginFeature
+import com.example.tryggakampus.presentation.authentication.loginPage.LoginPage
+import com.example.tryggakampus.presentation.authentication.registerPage.RegisterPage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -64,8 +67,14 @@ sealed interface Routes {
         override fun routeName() = "SurveyPage"
     }
 
-    @Serializable data object LoginFeature: Routes {
-        override fun routeName() = "LoginFeature"
+    @Serializable data object Authentication {
+        @Serializable data object LoginPage: Routes {
+            override fun routeName() = "LoginPage"
+        }
+
+        @Serializable data object RegisterPage: Routes {
+            override fun routeName() = "RegisterPage"
+        }
     }
 }
 
@@ -78,7 +87,7 @@ fun Navigation(
     Firebase.auth.addAuthStateListener {
         if (it.currentUser == null) {
             Log.d("Auth", "User logged out, redirecting to Login page")
-            navController.navigate(Routes.LoginFeature)
+            navController.navigate(Routes.Authentication.LoginPage)
             return@addAuthStateListener
         }
 
@@ -136,10 +145,21 @@ fun Navigation(
                     SettingsPage(vm, args.title)
                 }
 
-                composable<Routes.LoginFeature> {
-                    LoginFeature()
-                }
+                navigation<Routes.Authentication>(startDestination = Routes.Authentication.LoginPage) {
+                    composable<Routes.Authentication.LoginPage> (
+                        enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) },
+                        exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) }
+                    ) {
+                        LoginPage()
+                    }
 
+                    composable<Routes.Authentication.RegisterPage> (
+                        enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) },
+                        exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) }
+                    ) {
+                        RegisterPage()
+                    }
+                }
             }
         }
     }

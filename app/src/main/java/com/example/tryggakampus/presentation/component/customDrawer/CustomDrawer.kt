@@ -117,7 +117,7 @@ fun PrimaryDrawerItems(
                         DrawerItem.Survey -> Routes.SurveyPage()
                         DrawerItem.Advice -> Routes.AdvicePage()
                         DrawerItem.Stories -> Routes.StoriesPage()
-                        DrawerItem.Login -> Routes.LoginFeature
+                        DrawerItem.Login -> Routes.Authentication.LoginPage
                         else -> {}
                     })
                 }

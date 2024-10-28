@@ -1,4 +1,4 @@
-package com.example.tryggakampus.presentation.loginfeature
+package com.example.tryggakampus.presentation.authentication.registerPage
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tryggakampus.domain.repository.AuthRepositoryImpl
 import com.example.tryggakampus.domain.repository.AuthResponse
+import com.example.tryggakampus.presentation.authentication.loginPage.AuthError
 import kotlinx.coroutines.launch
 
-data class AuthError(val message: String)
 
-class LoginViewModel : ViewModel() {
+class RegisterViewModel : ViewModel() {
     var email by mutableStateOf("")
         private set
 
@@ -24,7 +24,7 @@ class LoginViewModel : ViewModel() {
     var password by mutableStateOf("")
         private set
 
-    var signingIn by mutableStateOf(false)
+    var signingUp by mutableStateOf(false)
     var error by mutableStateOf<AuthError?>(null)
 
     fun clearError() {
@@ -44,30 +44,29 @@ class LoginViewModel : ViewModel() {
         passwordIsValid = password.length >= 8
     }
 
-    fun onRequestLogin() {
-        if (email.isEmpty() || password.isEmpty()) {
-            error = AuthError("Wrong username or password")
-            return
-        }
-
+    fun onRequestSignUp() {
         viewModelScope.launch {
-            signingIn = true
+            signingUp = true
 
-            val authResponse: AuthResponse = AuthRepositoryImpl.authenticateUser(email, password)
+            val authResponse = AuthRepositoryImpl.registerUser(email, password)
 
             when (authResponse) {
-                AuthResponse.FAILURE -> {
+                AuthResponse.SignUp.FAILURE -> {
                     error = AuthError("Wrong username or password")
                 }
 
-                AuthResponse.ERROR -> {
+                AuthResponse.SignUp.EMAIL_TAKEN -> {
+                    error = AuthError("This email is already taken")
+                }
+
+                AuthResponse.SignUp.ERROR -> {
                     error = AuthError("Something went wrong, please try again later.")
                 }
 
                 else -> error = null
             }
 
-            signingIn = false
+            signingUp = false
         }
     }
 }
