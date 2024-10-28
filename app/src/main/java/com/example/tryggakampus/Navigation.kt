@@ -1,5 +1,6 @@
 package com.example.tryggakampus
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -19,6 +20,8 @@ import com.example.tryggakampus.presentation.storiesPage.StoriesPage
 import com.example.tryggakampus.presentation.advicePage.AdvicePage
 import com.example.tryggakampus.presentation.surveyPage.SurveyPage
 import com.example.tryggakampus.presentation.loginfeature.LoginFeature
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 import kotlinx.serialization.Serializable
 
@@ -71,6 +74,17 @@ fun Navigation(
     children: @Composable() (page: @Composable()() -> Unit) -> Unit
 ) {
     val navController = rememberNavController()
+
+    Firebase.auth.addAuthStateListener {
+        if (it.currentUser == null) {
+            Log.d("Auth", "User logged out, redirecting to Login page")
+            navController.navigate(Routes.LoginFeature)
+            return@addAuthStateListener
+        }
+
+        Log.d("Auth", "User authenticated, redirecting to Landing page")
+        navController.navigate(Routes.LandingPage())
+    }
 
     /*
     *   The reason for adding CompositionLocalProvider is to avoid prop-drilling,
