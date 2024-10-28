@@ -81,6 +81,7 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel<ArticlesPageViewMo
             items(viewModel.articles) { item: ArticleModel ->
                 ArticleBox(item, onClick = {})
             }
+    
         }
     }
 }
@@ -93,7 +94,7 @@ fun ArticleBox(article: ArticleModel, onClick: () -> Unit) {
         modifier = Modifier
             .clip(shape = RoundedCornerShape(10.dp))
             .clickable { onClick() }
-            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp))
+            .background(MaterialTheme.colorScheme.primary)
             .padding(10.dp)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -113,7 +114,7 @@ fun ArticleBoxHeader(title: String) {
             text = title,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.onPrimary,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
@@ -127,13 +128,13 @@ fun ArticleBoxBody(content: String, webpage: String) {
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Text(content, fontSize = 16.sp)
-
+        Text(content, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
         Text(
             buildAnnotatedString {
                 withLink(LinkAnnotation.Url(url = webpage)) {
                     append("Read More")
                 }
+
             },
             color = Color(0xFFF19107),
             fontWeight = FontWeight.Medium,
