@@ -5,6 +5,9 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -84,25 +87,8 @@ fun Navigation(
 ) {
     val navController = rememberNavController()
 
-    Firebase.auth.addAuthStateListener {
-        if (it.currentUser == null) {
-            Log.d("Auth", "User logged out, redirecting to Login page")
-            navController.navigate(Routes.Authentication.LoginPage)
-            return@addAuthStateListener
-        }
+    observeAuthStateChanges(navController)
 
-        Log.d("Auth", "User authenticated, redirecting to Landing page")
-        navController.navigate(Routes.LandingPage())
-    }
-
-    /*
-    *   The reason for adding CompositionLocalProvider is to avoid prop-drilling,
-    *   which is a problem with frameworks like react(, and jetpack compose)
-    *   https://www.freecodecamp.org/news/prop-drilling-in-react-explained-with-examples/
-    *
-    *   solution from:
-    *   https://medium.com/@ramadan123sayed/composition-local-in-jetpack-compose-4d0a54afa67c#36f0
-    * */
     CompositionLocalProvider(LocalNavController provides navController) {
         children {
             NavHost(navController = navController, startDestination = Routes.LandingPage()) {
@@ -161,6 +147,42 @@ fun Navigation(
                     }
                 }
             }
+        }
+    }
+}
+
+fun observeAuthStateChanges(navController: NavHostController) {
+    Firebase.auth.addAuthStateListener { auth ->
+        handleAuthStateChange(auth.currentUser != null, navController)
+    }
+}
+
+private fun handleAuthStateChange(isAuthenticated: Boolean, navController: NavHostController) {
+    val lifecycle = navController.currentBackStackEntry?.lifecycle ?: return
+
+    val observer = object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            if (event == Lifecycle.Event.ON_START) {
+                navigateBasedOnAuthState(isAuthenticated, navController)
+                lifecycle.removeObserver(this)
+            }
+        }
+    }
+
+    lifecycle.addObserver(observer)
+}
+
+private fun navigateBasedOnAuthState(isAuthenticated: Boolean, navController: NavHostController) {
+    if (isAuthenticated) {
+        Log.d("Auth", "User authenticated, redirecting to Landing page")
+        navController.navigate(Routes.LandingPage()) {
+            popUpTo(0) { inclusive = true }
+        }
+    } else {
+        Log.d("Auth", "User logged out, redirecting to Login page")
+        navController.navigate(Routes.Authentication.LoginPage) {
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
         }
     }
 }
