@@ -45,14 +45,14 @@ fun CustomDrawer(
             DrawerActionBar(onCloseClick = onCloseClick)
             AppLogo()
             PrimaryDrawerItems(
-                drawerItems = drawerItems.take(drawerItems.size - 1),
+                drawerItems = drawerItems.take(drawerItems.size - 2),
                 selectedItem = selectedDrawerItem,
                 onClickItem = onNavigationItemClick
             )
         }
 
         SecondaryDrawerItems(
-            drawerItems = drawerItems.takeLast(1),
+            drawerItems = drawerItems.takeLast(2),
             selectedItem = selectedDrawerItem,
             onClickItem = onNavigationItemClick
         )
@@ -101,9 +101,15 @@ fun PrimaryDrawerItems(
     onClickItem: (DrawerItem) -> Unit
 ) {
     val navController = LocalNavController.current
+    val userIsAuthenticated = Firebase.auth.currentUser != null
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         drawerItems.forEach { drawerItem ->
+            if ((drawerItem.accessLevel == AccessLevel.AUTH_ONLY && !userIsAuthenticated) ||
+                (drawerItem.accessLevel == AccessLevel.UNAUTH_ONLY && userIsAuthenticated)) {
+                return@forEach
+            }
+
             NavigationItemView(
                 drawerItem = drawerItem,
                 selected = drawerItem == selectedItem,
@@ -134,9 +140,15 @@ fun SecondaryDrawerItems(
     onClickItem: (DrawerItem) -> Unit
 ) {
     val navController = LocalNavController.current
+    val userIsAuthenticated = Firebase.auth.currentUser != null
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         drawerItems.forEach { drawerItem ->
+            if ((drawerItem.accessLevel == AccessLevel.AUTH_ONLY && !userIsAuthenticated) ||
+                (drawerItem.accessLevel == AccessLevel.UNAUTH_ONLY && userIsAuthenticated)) {
+                return@forEach
+            }
+
             NavigationItemView(
                 drawerItem = drawerItem,
                 selected = drawerItem == selectedItem,
