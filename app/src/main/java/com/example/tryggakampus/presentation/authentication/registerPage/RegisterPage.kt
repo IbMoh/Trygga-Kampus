@@ -1,123 +1,113 @@
 package com.example.tryggakampus.presentation.authentication.registerPage
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.foundation.layout.size
+
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.font.FontWeight
+
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tryggakampus.LocalNavController
 import com.example.tryggakampus.Routes
+import com.example.tryggakampus.presentation.component.BlockButton
+import com.example.tryggakampus.presentation.component.FormContainer
+import com.example.tryggakampus.presentation.component.ErrorBox
+import com.example.tryggakampus.presentation.component.OutlinedInput
 
 @Composable
 fun RegisterPage() {
     val vm: RegisterViewModel = viewModel<RegisterViewModel>()
-    val navController = LocalNavController.current
 
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(20.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Sign Up")
+        RegisterFormHeader()
 
-        OutlinedInput(
-            label = "email",
-            value = vm.email,
-            onValueChange = { vm.onEmailChange(it) },
-            isError = !vm.emailIsValid
-        )
+        FormContainer {
+            OutlinedInput(
+                label = "email",
+                value = vm.email,
+                onValueChange = { vm.onEmailChange(it) },
+                isError = !vm.emailIsValid
+            )
 
-        OutlinedInput(
-            label = "password",
-            value = vm.password,
-            onValueChange = { vm.onPasswordChange(it) },
-            isError = !vm.passwordIsValid
-        )
+            OutlinedInput(
+                label = "password",
+                value = vm.password,
+                onValueChange = { vm.onPasswordChange(it) },
+                isError = !vm.passwordIsValid
+            )
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { vm.onRequestSignUp() },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            ),
-            enabled = (vm.emailIsValid && vm.passwordIsValid)
-        ) {
-            Text("Sign Up")
-        }
-
-        vm.error?.let {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { vm.clearError() }
-                    .clip(shape = RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.errorContainer)
-                    .padding(vertical = 5.dp, horizontal = 10.dp),
-                horizontalArrangement = Arrangement.Center
+            BlockButton (
+                onClick = { if (!vm.signingUp) vm.onRequestSignUp() },
+                enabled = (vm.emailIsValid && vm.passwordIsValid)
             ) {
-                Text(text = it.message, color = MaterialTheme.colorScheme.onErrorContainer)
+                if (vm.signingUp) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = MaterialTheme.colorScheme.onSecondary,
+                        trackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
+                    )
+                } else {
+                    Text("Sign Up")
+                }
             }
         }
 
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Already registered?")
-            Button(onClick = { navController.navigate(Routes.Authentication.LoginPage) }) {
-                Text(text = "Sign In", color = MaterialTheme.colorScheme.onPrimary)
-            }
+        Spacer(modifier = Modifier.height(16.dp))
+        vm.error?.let {
+            ErrorBox(it.message, onClick = { vm.clearError() })
         }
+
+        Spacer(modifier = Modifier.size(30.dp))
+        RegisterFormFooter()
     }
 }
 
 @Composable
-fun OutlinedInput(
-    label: String,
-    value: String = "",
-    onValueChange: (v: String) -> Unit,
-    isError: Boolean = false
-) {
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(label) },
-        value = value,
-        onValueChange = onValueChange,
-        isError = isError,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
-
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedIndicatorColor = Color.Transparent,
-
-            cursorColor = MaterialTheme.colorScheme.secondary,
-
-            selectionColors = TextSelectionColors(
-                handleColor = MaterialTheme.colorScheme.secondary,
-                backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-            )
-        )
+fun RegisterFormHeader() {
+    Text(
+        text = "Trygga Campus - Sign Up",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground
     )
+    Spacer(modifier = Modifier.size(30.dp))
+}
+
+@Composable
+fun RegisterFormFooter() {
+    val navController = LocalNavController.current
+
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text("Already registered?")
+        Button(onClick = { navController.navigate(Routes.Authentication.LoginPage) }) {
+            Text(text = "Sign In", color = MaterialTheme.colorScheme.onPrimary)
+        }
+    }
 }

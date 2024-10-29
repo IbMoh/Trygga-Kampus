@@ -8,24 +8,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.tryggakampus.domain.repository.AuthRepositoryImpl
 import com.example.tryggakampus.domain.repository.AuthResponse
 import com.example.tryggakampus.presentation.authentication.loginPage.AuthError
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 class RegisterViewModel : ViewModel() {
-    var email by mutableStateOf("")
-        private set
+    var email by mutableStateOf(""); private set
+    var emailIsValid by mutableStateOf(true); private set
 
-    var emailIsValid by mutableStateOf(true)
-        private set
+    var password by mutableStateOf(""); private set
+    var passwordIsValid by mutableStateOf(true); private set
 
-    var passwordIsValid by mutableStateOf(true)
-        private set
-
-    var password by mutableStateOf("")
-        private set
-
-    var signingUp by mutableStateOf(false)
-    var error by mutableStateOf<AuthError?>(null)
+    var signingUp by mutableStateOf(false); private set
+    var error by mutableStateOf<AuthError?>(null); private set
 
     fun clearError() {
         error = null
@@ -45,9 +40,14 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun onRequestSignUp() {
+        if (email.isEmpty() || password.isEmpty()) {
+            error = AuthError("Email & Username cannot be empty")
+            return
+        }
+
         viewModelScope.launch {
             signingUp = true
-
+            delay(2000)
             val authResponse = AuthRepositoryImpl.registerUser(email, password)
 
             when (authResponse) {
