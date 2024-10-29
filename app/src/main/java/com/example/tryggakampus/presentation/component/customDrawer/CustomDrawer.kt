@@ -12,11 +12,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.sharp.Close
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -24,6 +33,9 @@ import androidx.compose.ui.unit.dp
 import com.example.tryggakampus.LocalNavController
 import com.example.tryggakampus.R
 import com.example.tryggakampus.Routes
+import com.example.tryggakampus.domain.repository.AuthRepositoryImpl
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
 fun CustomDrawer(
@@ -141,6 +153,17 @@ fun SecondaryDrawerItems(
 ) {
     val navController = LocalNavController.current
     val userIsAuthenticated = Firebase.auth.currentUser != null
+    val (requestLogoutConfirm, setRequestLogoutConfirm) = remember { mutableStateOf(false) }
+
+    if (requestLogoutConfirm) {
+        ConfirmLogout(
+            onAccept = {
+                Firebase.auth.signOut()
+                setRequestLogoutConfirm(false)
+            },
+            onReject = { setRequestLogoutConfirm(false) }
+        )
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         drawerItems.forEach { drawerItem ->
@@ -154,12 +177,51 @@ fun SecondaryDrawerItems(
                 selected = drawerItem == selectedItem,
                 onClick = {
                     onClickItem(drawerItem)
-                    navController.navigate(when(drawerItem) {
-                        DrawerItem.Settings -> Routes.SettingsPage()
-                        else -> {}
-                    })
+                    if (drawerItem == DrawerItem.Logout) {
+                        setRequestLogoutConfirm(true)
+                    } else {
+                        navController.navigate(when(drawerItem) {
+                            DrawerItem.Settings -> Routes.SettingsPage()
+                            else -> {}
+                        })
+                    }
                 }
             )
         }
     }
+}
+
+@Composable
+fun ConfirmLogout(
+    onAccept: () -> Unit,
+    onReject: () -> Unit
+) {
+    AlertDialog(
+        containerColor = MaterialTheme.colorScheme.background,
+        titleContentColor = MaterialTheme.colorScheme.onBackground,
+
+        icon = { Icon(Icons.Default.Warning, contentDescription = "Warning Icon") },
+        title = { Text(text = "You are about to logout!") },
+
+        onDismissRequest = { onReject() },
+
+        confirmButton = {
+            Button(
+                onClick = { onAccept() },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Text("Confirm")
+            }
+        },
+
+        dismissButton = {
+            Button(
+                onClick = { onReject() },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Text("Dismiss")
+            }
+        }
+    )
+
 }
