@@ -41,7 +41,7 @@ object ArticleRepositoryImpl: ArticleRepository {
                 .await()
         } catch (e: Exception) {
             Log.d("AddArticleError", "Failed to add article: ${e.localizedMessage}")
-            throw e  // Rethrow to allow the ViewModel to handle the error
+            throw e
         }
     }
 
@@ -54,7 +54,7 @@ object ArticleRepositoryImpl: ArticleRepository {
                 .await()
         } catch (e: Exception) {
             Log.d("DeleteArticleError", "Failed to delete article: ${e.localizedMessage}")
-            throw e  // Rethrow to allow the ViewModel to handle the error
+            throw e
         }
     }
 }
