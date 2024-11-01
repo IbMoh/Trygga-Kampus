@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -25,6 +26,7 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
     var title by remember { mutableStateOf("") }
     var summary by remember { mutableStateOf("") }
     var webpage by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -33,29 +35,54 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
             Column {
                 OutlinedTextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = {
+                        title = it
+                        showError = false
+                    },
                     label = { Text("Title") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = showError && title.isBlank()
                 )
                 OutlinedTextField(
                     value = summary,
-                    onValueChange = { summary = it },
+                    onValueChange = {
+                        summary = it
+                        showError = false
+                    },
                     label = { Text("Summary") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = showError && summary.isBlank()
                 )
                 OutlinedTextField(
                     value = webpage,
-                    onValueChange = { webpage = it },
+                    onValueChange = {
+                        webpage = it
+                        showError = false
+                    },
                     label = { Text("Webpage URL") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = showError && webpage.isBlank()
                 )
+
+
+                if (showError) {
+                    Text(
+                        text = "All fields are required.",
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
             }
         },
         confirmButton = {
             Button(
                 onClick = {
-                    viewModel.addArticle(title, summary, webpage)
-                    onDismiss()
+                    if (title.isNotBlank() && summary.isNotBlank() && webpage.isNotBlank()) {
+                        viewModel.addArticle(title, summary, webpage)
+                        onDismiss()
+                    } else {
+                        showError = true
+                    }
                 }
             ) {
                 Text("Add")

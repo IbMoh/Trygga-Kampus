@@ -58,17 +58,23 @@ class ArticlesPageViewModel: ViewModel() {
     }
 
     fun addArticle(title: String, summary: String, webpage: String) {
+        if (title.isBlank() || summary.isBlank() || webpage.isBlank()) {
+            Log.d("AddArticleError", "Title, summary, and webpage cannot be empty.")
+            return
+        }
+
         viewModelScope.launch {
-                val newArticle = ArticleModel(
-                    id = UUID.randomUUID().toString(),
-                    title = title,
-                    summary = summary,
-                    webpage = webpage
-                )
+            val newArticle = ArticleModel(
+                id = UUID.randomUUID().toString(),
+                title = title,
+                summary = summary,
+                webpage = webpage
+            )
             ArticleRepositoryImpl.addArticle(newArticle)
             articles.add(newArticle)
         }
     }
+
     fun deleteArticle(article: ArticleModel) {
         viewModelScope.launch {
             try {
