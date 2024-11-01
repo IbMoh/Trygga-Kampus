@@ -10,6 +10,7 @@ import kotlinx.coroutines.tasks.await
 interface ArticleRepository {
     suspend fun getAllArticles(source: Source): List<ArticleModel>
     suspend fun addArticle(article: ArticleModel)
+    suspend fun deleteArticle(articleId: String)
 }
 
 object ArticleRepositoryImpl: ArticleRepository {
@@ -40,6 +41,19 @@ object ArticleRepositoryImpl: ArticleRepository {
                 .await()
         } catch (e: Exception) {
             Log.d("AddArticleError", "Failed to add article: ${e.localizedMessage}")
+            throw e  // Rethrow to allow the ViewModel to handle the error
+        }
+    }
+
+    override suspend fun deleteArticle(articleId: String) {
+        try {
+            Firebase.firestore
+                .collection(COLLECTION_NAME)
+                .document(articleId)
+                .delete()
+                .await()
+        } catch (e: Exception) {
+            Log.d("DeleteArticleError", "Failed to delete article: ${e.localizedMessage}")
             throw e  // Rethrow to allow the ViewModel to handle the error
         }
     }

@@ -11,15 +11,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.surfaceColorAtElevation
@@ -45,7 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tryggakampus.domain.model.ArticleModel
 
 @Composable
-fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel<ArticlesPageViewModel>()) {
+fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
     val localContext = LocalContext.current
     var showAddDialog by remember { mutableStateOf(false) }
 
@@ -55,14 +60,29 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel<ArticlesPageViewMo
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                modifier = Modifier
-                    .background(Color.Transparent)
-            ) {
-                Icon(imageVector = Icons.Filled.Add,
-                    contentDescription = "Add Article",
-                    )
+            Column {
+                FloatingActionButton(
+                    onClick = { showAddDialog = true },
+                    modifier = Modifier.background(Color.Transparent)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add Article")
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                if (viewModel.deleteMode) {
+                    FloatingActionButton(
+                        onClick = { viewModel.toggleDeleteMode() },
+                        modifier = Modifier.background(Color.Transparent)
+                    ) {
+                        Icon(Icons.Filled.Close, contentDescription = "Cancel Delete Mode")
+                    }
+                } else {
+                    FloatingActionButton(
+                        onClick = { viewModel.toggleDeleteMode() },
+                        modifier = Modifier.background(Color.Transparent)
+                    ) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Enable Delete Mode")
+                    }
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.End
@@ -79,33 +99,44 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel<ArticlesPageViewMo
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             items(viewModel.articles) { item: ArticleModel ->
-                ArticleBox(item, onClick = {})
+                ArticleBox(
+                    article = item,
+                    onDelete = { viewModel.deleteArticle(item) },
+                    onClick = {},
+                    deleteMode = viewModel.deleteMode
+                )
             }
-    
         }
     }
 }
 
 
 
-@Composable
-fun ArticleBox(article: ArticleModel, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .clip(shape = RoundedCornerShape(10.dp))
-            .clickable { onClick() }
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(10.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+
+
+    @Composable
+    fun ArticleBox(
+        article: ArticleModel,
+        onDelete: () -> Unit,
+        onClick: () -> Unit,
+        deleteMode: Boolean
     ) {
-         ArticleBoxHeader(article.title?: "")
-         ArticleBoxBody(article.summary, article.webpage?: "No Link")
+        Column(
+            modifier = Modifier
+                .clip(shape = RoundedCornerShape(10.dp))
+                .clickable { onClick() }
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(10.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            ArticleBoxHeader(article.title ?: "", onDelete, deleteMode)
+            ArticleBoxBody(article.summary, article.webpage ?: "No Link")
+        }
     }
-}
 
 @Composable
-fun ArticleBoxHeader(title: String) {
+fun ArticleBoxHeader(title: String, onDelete: () -> Unit, deleteMode: Boolean) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -118,12 +149,16 @@ fun ArticleBoxHeader(title: String) {
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
+        if (deleteMode) {
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Filled.Delete, contentDescription = "Delete Article", tint = Color.Red)
+            }
+        }
     }
 }
 
 @Composable
 fun ArticleBoxBody(content: String, webpage: String) {
-    val context = LocalContext.current
 
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp)

@@ -1,7 +1,11 @@
 package com.example.tryggakampus.presentation.articlesPage
 
 import android.content.Context
+import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.lifecycle.ViewModel
@@ -17,6 +21,8 @@ import java.util.UUID
 
 class ArticlesPageViewModel: ViewModel() {
     var articles = mutableStateListOf<ArticleModel>()
+        private set
+    var deleteMode by mutableStateOf(false)
         private set
 
     fun loadArticles(context: Context) {
@@ -62,6 +68,19 @@ class ArticlesPageViewModel: ViewModel() {
             ArticleRepositoryImpl.addArticle(newArticle)
             articles.add(newArticle)
         }
+    }
+    fun deleteArticle(article: ArticleModel) {
+        viewModelScope.launch {
+            try {
+                ArticleRepositoryImpl.deleteArticle(article.id)
+                articles.remove(article)
+            } catch (e: Exception) {
+                Log.d("DeleteArticleError", "Error deleting article: ${e.localizedMessage}")
+            }
+        }
+    }
+    fun toggleDeleteMode() {
+        deleteMode = !deleteMode
     }
 
 }
