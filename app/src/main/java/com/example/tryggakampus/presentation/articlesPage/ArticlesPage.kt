@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +48,7 @@ import com.example.tryggakampus.domain.model.ArticleModel
 fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
     val localContext = LocalContext.current
     var showAddDialog by remember { mutableStateOf(false) }
+    var articleToDelete by remember { mutableStateOf<ArticleModel?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.loadArticles(localContext)
@@ -67,7 +70,7 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     items(viewModel.articles) { item: ArticleModel ->
                         ArticleBox(
                             article = item,
-                            onDelete = { viewModel.deleteArticle(item) },
+                            onDelete = { articleToDelete = item },
                             onClick = {},
                             deleteMode = viewModel.deleteMode
                         )
@@ -113,11 +116,34 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     viewModel = viewModel
                 )
             }
+
+            if (articleToDelete != null) {
+                AlertDialog(
+                    onDismissRequest = { articleToDelete = null },
+                    title = { Text("Confirm Deletion") },
+                    text = { Text("Are you sure you want to delete this article?") },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                articleToDelete?.let { viewModel.deleteArticle(it) }
+                                articleToDelete = null
+                            }
+                        ) {
+                            Text("Delete")
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = { articleToDelete = null }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
         }
     )
 }
-
-
 
 @Composable
 fun ArticleBox(
