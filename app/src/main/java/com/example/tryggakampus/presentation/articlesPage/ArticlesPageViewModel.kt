@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class ArticlesPageViewModel: ViewModel() {
+class ArticlesPageViewModel : ViewModel() {
     var articles = mutableStateListOf<ArticleModel>()
         private set
     var deleteMode by mutableStateOf(false)
@@ -27,14 +27,23 @@ class ArticlesPageViewModel: ViewModel() {
     var loadingArticles = mutableStateOf(true)
         private set
 
+    init {
+        viewModelScope.launch {
+            ArticleRepositoryImpl.articlesFlow.collect { updatedArticles ->
+                articles.clear()
+                articles.addAll(updatedArticles)
+            }
+        }
+    }
+
     private fun setLoadingArticles(b: Boolean) {
         loadingArticles.value = b
     }
+
     fun loadArticles(context: Context) {
         viewModelScope.launch {
             setLoadingArticles(true)
 
-            articles.clear()
             val lastFetchTimeKey = longPreferencesKey("articles_last_fetch_time")
             val lastFetchTime: Long = context.dataStore.data
                 .map { preferences -> preferences[lastFetchTimeKey] ?: 0L }
@@ -48,11 +57,18 @@ class ArticlesPageViewModel: ViewModel() {
                 Source.CACHE
             }
 
-            articles.addAll(ArticleRepositoryImpl.getAllArticles(source))
+            if (source == Source.SERVER) {
+                articles.clear()
+            }
+
+            val fetchedArticles = ArticleRepositoryImpl.getAllArticles(source)
+            articles.clear()
+            articles.addAll(fetchedArticles)
 
             if (source == Source.SERVER) {
                 updateArticlesFetchTime(context)
             }
+
             setLoadingArticles(false)
         }
     }
@@ -79,7 +95,6 @@ class ArticlesPageViewModel: ViewModel() {
                 webpage = webpage
             )
             ArticleRepositoryImpl.addArticle(newArticle)
-            articles.add(newArticle)
         }
     }
 
@@ -87,15 +102,15 @@ class ArticlesPageViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 ArticleRepositoryImpl.deleteArticle(article.id)
-                articles.remove(article)
             } catch (e: Exception) {
                 Log.d("DeleteArticleError", "Error deleting article: ${e.localizedMessage}")
             }
         }
     }
+
     fun toggleDeleteMode() {
         deleteMode = !deleteMode
     }
-
 }
+
 
