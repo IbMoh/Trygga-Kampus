@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
@@ -73,6 +74,7 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
         }
+
         return
     }
 
@@ -83,6 +85,14 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
+                if (viewModel.articles.isEmpty()) {
+                    Text(
+                        text = "No articles available. Please check back later or try refreshing.",
+                        modifier = Modifier.align(Alignment.Center),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                } else {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -98,6 +108,7 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                         )
                     }
                 }
+                    }
 
                 if (viewModel.deleteMode) {
                     FloatingActionButton(
