@@ -24,9 +24,16 @@ class ArticlesPageViewModel: ViewModel() {
         private set
     var deleteMode by mutableStateOf(false)
         private set
+    var loadingArticles = mutableStateOf(true)
+        private set
 
+    private fun setLoadingArticles(b: Boolean) {
+        loadingArticles.value = b
+    }
     fun loadArticles(context: Context) {
         viewModelScope.launch {
+            setLoadingArticles(true)
+
             articles.clear()
             val lastFetchTimeKey = longPreferencesKey("articles_last_fetch_time")
             val lastFetchTime: Long = context.dataStore.data
@@ -46,6 +53,7 @@ class ArticlesPageViewModel: ViewModel() {
             if (source == Source.SERVER) {
                 updateArticlesFetchTime(context)
             }
+            setLoadingArticles(false)
         }
     }
 
