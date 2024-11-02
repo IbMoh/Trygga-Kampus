@@ -36,9 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -196,15 +198,16 @@ fun ArticleBoxHeader(title: String) {
 
 @Composable
 fun ArticleBoxBody(content: String, webpage: String) {
-    val context = LocalContext.current
-
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         Text(content, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
         Text(
             buildAnnotatedString {
-                append("Read More")
+                withLink(LinkAnnotation.Url(url = webpage)) {
+                    append("Read More")
+                }
+
             },
             color = Color(0xFFF19107),
             fontWeight = FontWeight.Medium,
