@@ -1,12 +1,9 @@
 package com.example.tryggakampus.presentation.articlesPage
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,7 +27,7 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add New Article") },
+        title = { Text("New Article") },
         text = {
             Column {
                 OutlinedTextField(
@@ -41,7 +38,7 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
                     },
                     label = { Text("Title") },
                     modifier = Modifier.fillMaxWidth(),
-                    isError = showError && title.isBlank()
+                    isError = showError && title.isBlank(),
                 )
                 OutlinedTextField(
                     value = summary,
@@ -83,7 +80,7 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
                     } else {
                         showError = true
                     }
-                }
+                },
             ) {
                 Text("Add")
             }
@@ -91,13 +88,8 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
         dismissButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                modifier = Modifier.border(
-                    BorderStroke(2.dp, color = MaterialTheme.colorScheme.primary),
-                    shape = RoundedCornerShape(50)
-                )
             ) {
-                Text("Cancel", color = MaterialTheme.colorScheme.primary)
+                Text("Cancel")
             }
         }
     )
