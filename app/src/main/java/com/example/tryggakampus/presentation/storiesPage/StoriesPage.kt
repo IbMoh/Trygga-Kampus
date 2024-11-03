@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -97,6 +98,16 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
         .navigationBarsPadding()
         .fillMaxSize()
     ) {
+        if (viewModel.stories.size == 0) {
+            Column (modifier = Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("There are no stories to show.")
+
+                Button(onClick = { viewModel.setShowNewStoryForm(true) }) {
+                    Text("Submit a story")
+                }
+            }
+        }
+
         LazyColumn(
             modifier = Modifier.padding(vertical = 10.dp, horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
