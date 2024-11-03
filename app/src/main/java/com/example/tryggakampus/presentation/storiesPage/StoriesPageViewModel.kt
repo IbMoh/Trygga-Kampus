@@ -35,7 +35,7 @@ class StoriesPageViewModel: ViewModel() {
     var storyAnonymity = mutableStateOf<Boolean>(true)
         private set
 
-    var loadingStories = mutableStateOf(true)
+    var loadingStories = mutableStateOf(false)
         private set
 
     private fun setLoadingStories(b: Boolean) {

@@ -8,8 +8,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,22 +32,63 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.tryggakampus.ConnectivityObserver
 
 import com.example.tryggakampus.LocalNavController
+import com.example.tryggakampus.NetworkConnectivityObserver
 import com.example.tryggakampus.Routes
 import com.example.tryggakampus.data.Config
 import com.example.tryggakampus.presentation.settingsPage.ArticleTabs
 import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel
 import com.example.tryggakampus.presentation.storiesPage.StoriesPageViewModel
+
+@Composable
+fun DisplayErrorWhenNetworkUnavailable(content: @Composable () -> Unit) {
+    val localContext = LocalContext.current
+    val connectivityObserver: ConnectivityObserver = NetworkConnectivityObserver(localContext)
+    val networkStatusState = connectivityObserver
+        .observe()
+        .collectAsState(
+            initial = ConnectivityObserver.Status.Unavailable
+        )
+
+    if (networkStatusState.value == ConnectivityObserver.Status.Unavailable ||
+        networkStatusState.value == ConnectivityObserver.Status.Lost
+    ) {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.error)
+                .padding(10.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                Icons.Default.Warning,
+                tint = MaterialTheme.colorScheme.onError,
+                contentDescription = ""
+            )
+            Spacer(modifier = Modifier.size(10.dp))
+            Text(
+                "Network connection unavailable",
+                color = MaterialTheme.colorScheme.onError
+            )
+        }
+        return
+    }
+
+    content()
+}
 
 @Composable
 fun BottomAppBar() {
@@ -56,14 +100,16 @@ fun BottomAppBar() {
         .substringBefore("?")
         .substringAfterLast(".")
 
-    when (className) {
-        Routes.SettingsPage().routeName() -> BottomSettingsBar()
-        Routes.StoriesNavGraph.StoriesPage.routeName() -> BottomStoriesBar()
-        // Routes.StoriesNavGraph.StoryPage().routeName() -> BottomAppBar { BottomStoryBar() }
-        // Routes.ArticlesPage().routeName() -> BottomAppBar { BottomArticlesBar() }
-        // Routes.LandingPage().routeName() -> BottomAppBar { BottomLandingBar() }
-        // Routes.ProfilePage().routeName() -> BottomAppBar { BottomProfileBar() }
-        else -> {}
+    DisplayErrorWhenNetworkUnavailable() {
+        when (className) {
+            Routes.SettingsPage().routeName() -> BottomSettingsBar()
+            Routes.StoriesNavGraph.StoriesPage.routeName() -> BottomStoriesBar()
+            // Routes.StoriesNavGraph.StoryPage().routeName() -> BottomAppBar { BottomStoryBar() }
+            // Routes.ArticlesPage().routeName() -> BottomAppBar { BottomArticlesBar() }
+            // Routes.LandingPage().routeName() -> BottomAppBar { BottomLandingBar() }
+            // Routes.ProfilePage().routeName() -> BottomAppBar { BottomProfileBar() }
+            else -> {}
+        }
     }
 }
 

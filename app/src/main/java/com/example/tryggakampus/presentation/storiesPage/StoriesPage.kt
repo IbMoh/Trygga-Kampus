@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,7 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tryggakampus.ConnectivityObserver
 import com.example.tryggakampus.LocalNavController
+import com.example.tryggakampus.NetworkConnectivityObserver
 import com.example.tryggakampus.Routes
 import com.example.tryggakampus.domain.model.StoryModel
 import kotlin.math.roundToInt
@@ -50,7 +53,22 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
     val localContext = LocalContext.current
     val navigator = LocalNavController.current
 
-    LaunchedEffect(Unit) {
+    val connectivityObserver: ConnectivityObserver = NetworkConnectivityObserver(localContext)
+    val networkStatusState = connectivityObserver
+        .observe()
+        .collectAsState(
+            initial = ConnectivityObserver.Status.Unavailable
+        )
+
+    val networkStatus = networkStatusState.value
+
+    LaunchedEffect(networkStatus) {
+        if (networkStatus == ConnectivityObserver.Status.Unavailable ||
+            networkStatus == ConnectivityObserver.Status.Lost
+        ) {
+            return@LaunchedEffect
+        }
+
         viewModel.loadStories(localContext)
     }
 
