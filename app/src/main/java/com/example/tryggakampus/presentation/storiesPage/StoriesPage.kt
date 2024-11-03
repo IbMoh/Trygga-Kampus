@@ -46,6 +46,7 @@ import com.example.tryggakampus.LocalNavController
 import com.example.tryggakampus.NetworkConnectivityObserver
 import com.example.tryggakampus.Routes
 import com.example.tryggakampus.domain.model.StoryModel
+import com.google.firebase.firestore.Source
 import kotlin.math.roundToInt
 
 @Composable
@@ -66,6 +67,7 @@ fun StoriesPage(viewModel: StoriesPageViewModel = viewModel<StoriesPageViewModel
         if (networkStatus == ConnectivityObserver.Status.Unavailable ||
             networkStatus == ConnectivityObserver.Status.Lost
         ) {
+            viewModel.loadStories(localContext, Source.CACHE)
             return@LaunchedEffect
         }
 

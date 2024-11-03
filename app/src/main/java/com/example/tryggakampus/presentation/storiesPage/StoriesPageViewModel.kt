@@ -77,7 +77,7 @@ class StoriesPageViewModel: ViewModel() {
         }
     }
 
-    fun loadStories(context: Context) {
+    fun loadStories(context: Context, dataSource: Source? = null) {
         viewModelScope.launch {
             setLoadingStories(true)
 
@@ -89,7 +89,7 @@ class StoriesPageViewModel: ViewModel() {
 
             val currentTimeMillis = System.currentTimeMillis()
             val timeDifference = (currentTimeMillis - lastFetchTime) / 1000
-            val source = if (timeDifference >= 20) {
+            val source = dataSource ?: if (timeDifference >= 20) {
                 Source.SERVER
             } else {
                 Source.CACHE
