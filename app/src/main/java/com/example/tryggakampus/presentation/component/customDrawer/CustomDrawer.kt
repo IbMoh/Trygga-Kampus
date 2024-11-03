@@ -21,9 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import com.example.tryggakampus.LocalNavController
 import com.example.tryggakampus.R
 import com.example.tryggakampus.Routes
-import com.example.tryggakampus.domain.repository.AuthRepositoryImpl
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -134,7 +131,7 @@ fun PrimaryDrawerItems(
                         DrawerItem.Form -> Routes.FormPage()
                         DrawerItem.Survey -> Routes.SurveyPage()
                         DrawerItem.Advice -> Routes.AdvicePage()
-                        DrawerItem.Stories -> Routes.StoriesPage()
+                        DrawerItem.Stories -> Routes.StoriesNavGraph.StoriesPage
                         DrawerItem.Login -> Routes.Authentication.LoginPage
                         else -> {}
                     })
