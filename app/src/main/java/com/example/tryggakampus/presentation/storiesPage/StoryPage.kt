@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.example.tryggakampus.LocalNavController
-import com.example.tryggakampus.domain.model.StoryModel
+import com.example.tryggakampus.navigation.LocalNavController
+import com.example.tryggakampus.data.model.StoryModel
 import com.example.tryggakampus.presentation.component.PageContainer
 
 @Composable

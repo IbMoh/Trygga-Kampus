@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tryggakampus.domain.repository.AuthRepositoryImpl
-import com.example.tryggakampus.domain.repository.AuthResponse
+import com.example.tryggakampus.data.repository.AuthRepositoryImpl
+import com.example.tryggakampus.data.repository.AuthResponse
 import kotlinx.coroutines.launch
 
 data class AuthError(val message: String)

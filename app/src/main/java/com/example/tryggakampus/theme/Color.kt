@@ -1,4 +1,4 @@
-package com.example.tryggakampus.ui.theme
+package com.example.tryggakampus.theme
 
 import androidx.compose.ui.graphics.Color
 

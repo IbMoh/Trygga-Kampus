@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tryggakampus.LocalNavController
-import com.example.tryggakampus.Routes
+import com.example.tryggakampus.navigation.LocalNavController
+import com.example.tryggakampus.navigation.Routes
 import com.example.tryggakampus.presentation.component.BlockButton
 import com.example.tryggakampus.presentation.component.FormContainer
 import com.example.tryggakampus.presentation.component.ErrorBox

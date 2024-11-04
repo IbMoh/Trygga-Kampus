@@ -1,4 +1,4 @@
-package com.example.tryggakampus.domain.model
+package com.example.tryggakampus.data.model
 
 data class NetworkError(
     val error: NetworkErr,

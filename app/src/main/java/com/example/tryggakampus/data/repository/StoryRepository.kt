@@ -1,7 +1,7 @@
-package com.example.tryggakampus.domain.repository
+package com.example.tryggakampus.data.repository
 
 import android.util.Log
-import com.example.tryggakampus.domain.model.StoryModel
+import com.example.tryggakampus.data.model.StoryModel
 import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.QuerySnapshot
 
@@ -10,7 +10,6 @@ import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.wait
 
 interface StoryRepository {
     suspend fun getAllStories(source: Source): List<StoryModel>
@@ -28,7 +27,7 @@ object StoryRepositoryImpl: StoryRepository {
     private const val COLLECTION_NAME = "student-stories"
 
     override suspend fun getAllStories(source: Source): List<StoryModel> {
-        val result = this.fetchAll(source)
+        val result = fetchAll(source)
 
         return result?.map { document ->
             val doc = document.toObject(StoryModel::class.java).apply {

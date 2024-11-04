@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 // import packages
-import com.example.tryggakampus.domain.model.AdviceItem
+import com.example.tryggakampus.data.model.AdviceItem
 
 // layout for card with the advice on it
 @Composable

@@ -1,7 +1,7 @@
 package com.example.tryggakampus.presentation.advicePage
 
 import com.example.tryggakampus.R
-import com.example.tryggakampus.domain.model.AdviceItem
+import com.example.tryggakampus.data.model.AdviceItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 

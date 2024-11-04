@@ -28,9 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.tryggakampus.LocalNavController
+import com.example.tryggakampus.navigation.LocalNavController
 import com.example.tryggakampus.R
-import com.example.tryggakampus.Routes
+import com.example.tryggakampus.navigation.Routes
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 

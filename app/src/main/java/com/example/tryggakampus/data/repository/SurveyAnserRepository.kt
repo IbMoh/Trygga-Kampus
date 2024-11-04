@@ -1,6 +1,6 @@
 package com.example.tryggakampus.data
 
-import com.example.tryggakampus.domain.model.SurveyAnswer
+import com.example.tryggakampus.data.model.SurveyAnswer
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 

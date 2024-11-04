@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tryggakampus.dataStore
-import com.example.tryggakampus.domain.model.ArticleModel
-import com.example.tryggakampus.domain.repository.ArticleRepositoryImpl
+import com.example.tryggakampus.data.model.ArticleModel
+import com.example.tryggakampus.data.repository.ArticleRepositoryImpl
 import com.google.firebase.firestore.Source
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

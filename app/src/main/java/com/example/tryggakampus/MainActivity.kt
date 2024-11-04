@@ -9,9 +9,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.tryggakampus.navigation.Navigation
 
 import com.example.tryggakampus.presentation.MainScreen
-import com.example.tryggakampus.ui.theme.TryggaKampusTheme
+import com.example.tryggakampus.theme.TryggaKampusTheme
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 

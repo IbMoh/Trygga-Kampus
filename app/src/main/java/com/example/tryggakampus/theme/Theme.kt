@@ -1,4 +1,4 @@
-package com.example.tryggakampus.ui.theme
+package com.example.tryggakampus.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

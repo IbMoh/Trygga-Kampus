@@ -1,4 +1,4 @@
-package com.example.tryggakampus.presentation.util
+package com.example.tryggakampus.utility
 
 import android.annotation.SuppressLint
 import androidx.compose.ui.Modifier

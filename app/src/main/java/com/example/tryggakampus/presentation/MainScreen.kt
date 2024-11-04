@@ -39,7 +39,7 @@ import com.example.tryggakampus.presentation.component.customDrawer.CustomDrawer
 import com.example.tryggakampus.presentation.component.customDrawer.DrawerItem
 import com.example.tryggakampus.presentation.component.customDrawer.isOpened
 import com.example.tryggakampus.presentation.component.customDrawer.opposite
-import com.example.tryggakampus.presentation.util.coloredShadow
+import com.example.tryggakampus.utility.coloredShadow
 
 import kotlin.math.roundToInt
 

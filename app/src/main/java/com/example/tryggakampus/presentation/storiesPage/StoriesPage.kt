@@ -41,11 +41,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tryggakampus.ConnectivityObserver
-import com.example.tryggakampus.LocalNavController
-import com.example.tryggakampus.NetworkConnectivityObserver
-import com.example.tryggakampus.Routes
-import com.example.tryggakampus.domain.model.StoryModel
+import com.example.tryggakampus.utility.network.ConnectivityObserver
+import com.example.tryggakampus.navigation.LocalNavController
+import com.example.tryggakampus.utility.network.NetworkConnectivityObserver
+import com.example.tryggakampus.navigation.Routes
+import com.example.tryggakampus.data.model.StoryModel
 import com.google.firebase.firestore.Source
 import kotlin.math.roundToInt
 

@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.example.tryggakampus.dataStore
-import com.example.tryggakampus.domain.model.StoryModel
-import com.example.tryggakampus.domain.repository.StoryRepositoryImpl
+import com.example.tryggakampus.data.model.StoryModel
+import com.example.tryggakampus.data.repository.StoryRepositoryImpl
 
 import com.google.firebase.firestore.Source
 

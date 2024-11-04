@@ -1,4 +1,4 @@
-package com.example.tryggakampus.domain.model
+package com.example.tryggakampus.data.model
 
 import com.google.firebase.Timestamp
 import kotlinx.serialization.Serializable

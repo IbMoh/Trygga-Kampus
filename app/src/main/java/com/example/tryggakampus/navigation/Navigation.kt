@@ -1,4 +1,4 @@
-package com.example.tryggakampus
+package com.example.tryggakampus.navigation
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -33,62 +33,8 @@ import com.example.tryggakampus.presentation.authentication.registerPage.Registe
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
-import kotlinx.serialization.Serializable
-
 val LocalNavController = compositionLocalOf<NavHostController> {
     error("NavController not provided")
-}
-
-sealed interface Routes {
-    fun routeName(): String
-
-    @Serializable data class LandingPage(val title: String = "Home"): Routes {
-        override fun routeName() = "LandingPage"
-    }
-
-    @Serializable data class SettingsPage(val title: String = "Settings"): Routes {
-        override fun routeName() = "SettingsPage"
-    }
-
-    @Serializable data class ProfilePage(val title: String = "Profile"): Routes {
-        override fun routeName() = "ProfilePage"
-    }
-
-    @Serializable data class ArticlesPage(val title: String = "Articles"): Routes {
-        override fun routeName() = "ArticlesPage"
-    }
-
-    @Serializable  data class FormPage(val title: String = "Form"): Routes {
-        override fun routeName() = "FormPage"
-    }
-
-    @Serializable object StoriesNavGraph {
-        @Serializable data object StoriesPage: Routes {
-            override fun routeName() = "StoriesPage"
-        }
-
-        @Serializable data class StoryPage(val storyModelId: String = "n07f0und"): Routes {
-            override fun routeName() = "StoryPage"
-        }
-    }
-
-    @Serializable data class AdvicePage(val title: String = "Advice"): Routes {
-        override fun routeName() = "AdvicePage"
-    }
-
-    @Serializable data class SurveyPage(val title: String = "Survey"): Routes {
-        override fun routeName() = "SurveyPage"
-    }
-
-    @Serializable data object Authentication {
-        @Serializable data object LoginPage: Routes {
-            override fun routeName() = "LoginPage"
-        }
-
-        @Serializable data object RegisterPage: Routes {
-            override fun routeName() = "RegisterPage"
-        }
-    }
 }
 
 @Composable
@@ -139,7 +85,9 @@ fun Navigation(
                         enterTransition = { slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) },
                         exitTransition = { slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) },
                     ) {
-                        val storiesBackStackEntry = remember { navController.getBackStackEntry(Routes.StoriesNavGraph.StoriesPage) }
+                        val storiesBackStackEntry = remember { navController.getBackStackEntry(
+                            Routes.StoriesNavGraph.StoriesPage
+                        ) }
                         val vm: StoriesPageViewModel = viewModel(storiesBackStackEntry)
                         val args = it.toRoute<Routes.StoriesNavGraph.StoryPage>()
                         StoryPage(vm, args.storyModelId)

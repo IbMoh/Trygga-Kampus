@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tryggakampus.R
 
-import com.example.tryggakampus.domain.model.AdviceItem
+import com.example.tryggakampus.data.model.AdviceItem
 
 // this is the screen that will show each card related to the category picked
 @Composable

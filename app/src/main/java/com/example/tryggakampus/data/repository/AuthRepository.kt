@@ -1,4 +1,4 @@
-package com.example.tryggakampus.domain.repository
+package com.example.tryggakampus.data.repository
 
 import android.util.Log
 

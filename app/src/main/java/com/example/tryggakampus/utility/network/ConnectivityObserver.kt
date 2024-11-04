@@ -1,4 +1,4 @@
-package com.example.tryggakampus
+package com.example.tryggakampus.utility.network
 
 import kotlinx.coroutines.flow.Flow
 

@@ -42,7 +42,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tryggakampus.domain.model.ArticleModel
+import com.example.tryggakampus.data.model.ArticleModel
 
 @Composable
 fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel<ArticlesPageViewModel>()) {

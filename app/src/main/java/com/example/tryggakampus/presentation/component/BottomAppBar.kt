@@ -43,11 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.tryggakampus.ConnectivityObserver
+import com.example.tryggakampus.utility.network.ConnectivityObserver
 
-import com.example.tryggakampus.LocalNavController
-import com.example.tryggakampus.NetworkConnectivityObserver
-import com.example.tryggakampus.Routes
+import com.example.tryggakampus.navigation.LocalNavController
+import com.example.tryggakampus.utility.network.NetworkConnectivityObserver
+import com.example.tryggakampus.navigation.Routes
 import com.example.tryggakampus.data.Config
 import com.example.tryggakampus.presentation.settingsPage.ArticleTabs
 import com.example.tryggakampus.presentation.settingsPage.SettingsPageViewModel

@@ -1,4 +1,4 @@
-package com.example.tryggakampus.ui.theme
+package com.example.tryggakampus.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

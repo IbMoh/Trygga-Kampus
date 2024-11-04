@@ -1,4 +1,4 @@
-package com.example.tryggakampus.domain.model
+package com.example.tryggakampus.data.model
 
 enum class AdviceCategory {
     PREVENTION,
