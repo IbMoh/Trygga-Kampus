@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -115,12 +116,20 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                 if (viewModel.deleteMode) {
                     FloatingActionButton(
                         onClick = { viewModel.toggleDeleteMode() },
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(16.dp)
+                            .width(120.dp)
                     ) {
-                        Icon(Icons.Filled.Close, contentDescription = "Cancel Delete Mode")
+                        Icon(
+                            Icons.Filled.Close,
+                            contentDescription = "Cancel Delete Mode",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
+
                 } else {
                     Row(
                         modifier = Modifier
@@ -130,7 +139,9 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     ) {
                         FloatingActionButton(
                             onClick = { showAddDialog = true },
-                            modifier = Modifier.background(Color.Transparent),
+                            modifier = Modifier
+                                .background(Color.Transparent)
+                                .width(100.dp),
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
@@ -139,7 +150,9 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
 
                         FloatingActionButton(
                             onClick = { viewModel.toggleDeleteMode() },
-                            modifier = Modifier.background(Color.Transparent),
+                            modifier = Modifier
+                                .background(Color.Transparent)
+                                .width(100.dp),
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
@@ -225,10 +238,17 @@ fun ArticleBox(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp)
-                    .size(24.dp)
+                    .size(36.dp)
+                    .background(Color(0xFFD32F2F), shape = CircleShape)
             ) {
-                Icon(Icons.Filled.Delete, contentDescription = "Delete Article", tint = Color.Red)
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Delete Article",
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
             }
+
         }
     }
 }
@@ -239,8 +259,8 @@ fun ArticleBoxHeader(title: String) {
         text = title,
         fontSize = 22.sp,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onPrimary,
-        maxLines = 2,
+        color = MaterialTheme.colorScheme.secondary,
+        maxLines = 4,
         overflow = TextOverflow.Ellipsis
     )
 }
