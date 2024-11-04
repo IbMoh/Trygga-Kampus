@@ -238,14 +238,12 @@ fun ArticleBox(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp)
-                    .size(36.dp)
-                    .background(Color(0xFFD32F2F), shape = CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     contentDescription = "Delete Article",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(25.dp)
                 )
             }
 
