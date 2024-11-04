@@ -193,7 +193,6 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
     )
 }
 
-
 @Composable
 fun ArticleBox(
     article: ArticleModel,
@@ -215,7 +214,6 @@ fun ArticleBox(
             ArticleBoxHeader(article.title ?: "")
             ArticleBoxBody(article.summary, article.webpage ?: "No Link")
         }
-
 
         if (deleteMode) {
             IconButton(
@@ -254,7 +252,6 @@ fun ArticleBoxBody(content: String, webpage: String) {
                 withLink(LinkAnnotation.Url(url = webpage)) {
                     append("Read More")
                 }
-
             },
             color = Color(0xFFF19107),
             fontWeight = FontWeight.Medium,

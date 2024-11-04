@@ -15,7 +15,6 @@ import com.example.tryggakampus.domain.repository.ArticleRepository
 import com.example.tryggakampus.domain.repository.ArticleRepositoryImpl
 import com.google.firebase.firestore.Source
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -28,12 +27,12 @@ class ArticlesPageViewModel : ViewModel() {
         private set
     var loadingArticles = mutableStateOf(true)
         private set
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
+    val errorMessage = MutableStateFlow<String?>(null)
+
 
     init {
         viewModelScope.launch {
-            ArticleRepositoryImpl._articlesFlow.collect { updatedArticles ->
+            ArticleRepositoryImpl.articlesFlow.collect { updatedArticles ->
                 articles.clear()
                 articles.addAll(updatedArticles)
             }
@@ -43,7 +42,6 @@ class ArticlesPageViewModel : ViewModel() {
     private fun setLoadingArticles(isLoading: Boolean) {
         loadingArticles.value = isLoading
     }
-
     fun loadArticles(context: Context) {
         viewModelScope.launch {
             setLoadingArticles(true)
@@ -76,13 +74,13 @@ class ArticlesPageViewModel : ViewModel() {
                     }
                 }
                 ArticleRepository.RepositoryResult.ERROR_NETWORK -> {
-                    _errorMessage.value = "Network error occurred. Please check your connection."
+                    errorMessage.value = "Network error occurred. Please check your connection."
                 }
                 ArticleRepository.RepositoryResult.ERROR_DATABASE -> {
-                    _errorMessage.value = "Database error. Could not fetch articles."
+                    errorMessage.value = "Database error. Could not fetch articles."
                 }
                 ArticleRepository.RepositoryResult.ERROR_UNKNOWN -> {
-                    _errorMessage.value = "An unexpected error occurred while loading articles."
+                    errorMessage.value = "An unexpected error occurred while loading articles."
                 }
             }
 
@@ -99,7 +97,7 @@ class ArticlesPageViewModel : ViewModel() {
 
     fun addArticle(title: String, summary: String, webpage: String) {
         if (title.isBlank() || summary.isBlank() || webpage.isBlank()) {
-            _errorMessage.value = "Title, summary, and webpage cannot be empty."
+            errorMessage.value = "Title, summary, and webpage cannot be empty."
             return
         }
 
@@ -113,7 +111,7 @@ class ArticlesPageViewModel : ViewModel() {
 
             val result = ArticleRepositoryImpl.addArticle(newArticle)
             if (result != ArticleRepository.RepositoryResult.SUCCESS) {
-                _errorMessage.value = "Failed to add article. Please try again."
+                errorMessage.value = "Failed to add article. Please try again."
             }
         }
     }
@@ -122,7 +120,7 @@ class ArticlesPageViewModel : ViewModel() {
         viewModelScope.launch {
             val result = ArticleRepositoryImpl.deleteArticle(article.id)
             if (result != ArticleRepository.RepositoryResult.SUCCESS) {
-                _errorMessage.value = "Failed to delete article."
+                errorMessage.value = "Failed to delete article."
             }
         }
     }
@@ -131,11 +129,7 @@ class ArticlesPageViewModel : ViewModel() {
         deleteMode = !deleteMode
     }
 
-
     fun clearErrorMessage() {
-        _errorMessage.value = null
+        errorMessage.value = null
     }
 }
-
-
-

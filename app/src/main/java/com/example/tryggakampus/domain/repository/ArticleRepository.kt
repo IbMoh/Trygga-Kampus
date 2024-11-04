@@ -27,7 +27,7 @@ interface ArticleRepository {
 
 object ArticleRepositoryImpl : ArticleRepository {
     private const val COLLECTION_NAME = "articles"
-    val _articlesFlow = MutableStateFlow<List<ArticleModel>>(emptyList())
+    val articlesFlow = MutableStateFlow<List<ArticleModel>>(emptyList())
 
     override suspend fun getAllArticles(source: Source): Pair<ArticleRepository.RepositoryResult, List<ArticleModel>> {
         val result = fetchAll(source)
@@ -35,7 +35,7 @@ object ArticleRepositoryImpl : ArticleRepository {
             val articles = result.map { document ->
                 document.toObject(ArticleModel::class.java).apply { id = document.id }
             }
-            _articlesFlow.value = articles
+            articlesFlow.value = articles
             ArticleRepository.RepositoryResult.SUCCESS to articles
         } else {
             ArticleRepository.RepositoryResult.ERROR_DATABASE to emptyList()
@@ -59,8 +59,8 @@ object ArticleRepositoryImpl : ArticleRepository {
     }
 
     override suspend fun addArticle(article: ArticleModel): ArticleRepository.RepositoryResult {
-        val updatedArticles = _articlesFlow.value.toMutableList().apply { add(article) }
-        _articlesFlow.value = updatedArticles
+        val updatedArticles = articlesFlow.value.toMutableList().apply { add(article) }
+        articlesFlow.value = updatedArticles
 
         return try {
             Firebase.firestore
@@ -79,10 +79,10 @@ object ArticleRepositoryImpl : ArticleRepository {
     }
 
     override suspend fun deleteArticle(articleId: String): ArticleRepository.RepositoryResult {
-        val updatedArticles = _articlesFlow.value.toMutableList().apply {
+        val updatedArticles = articlesFlow.value.toMutableList().apply {
             removeAll { it.id == articleId }
         }
-        _articlesFlow.value = updatedArticles
+        articlesFlow.value = updatedArticles
 
         return try {
             Firebase.firestore
