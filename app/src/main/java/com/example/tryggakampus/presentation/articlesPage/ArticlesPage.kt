@@ -130,14 +130,18 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     ) {
                         FloatingActionButton(
                             onClick = { showAddDialog = true },
-                            modifier = Modifier.background(Color.Transparent)
+                            modifier = Modifier.background(Color.Transparent),
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
                             Icon(Icons.Filled.Add, contentDescription = "Add Article")
                         }
 
                         FloatingActionButton(
                             onClick = { viewModel.toggleDeleteMode() },
-                            modifier = Modifier.background(Color.Transparent)
+                            modifier = Modifier.background(Color.Transparent),
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
                             Icon(Icons.Filled.Delete, contentDescription = "Enable Delete Mode")
                         }
