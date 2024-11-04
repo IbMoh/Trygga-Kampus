@@ -10,6 +10,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,8 +26,13 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
     var webpage by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
 
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            viewModel.clearErrorMessage()
+            onDismiss()
+        },
         title = { Text("New Article") },
         text = {
             Column {
@@ -61,10 +67,17 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
                     isError = showError && webpage.isBlank()
                 )
 
-
                 if (showError) {
                     Text(
                         text = "All fields are required.",
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                if (errorMessage != null) {
+                    Text(
+                        text = errorMessage ?: "",
                         color = Color.Red,
                         modifier = Modifier.padding(top = 8.dp)
                     )
@@ -76,7 +89,9 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
                 onClick = {
                     if (title.isNotBlank() && summary.isNotBlank() && webpage.isNotBlank()) {
                         viewModel.addArticle(title, summary, webpage)
-                        onDismiss()
+                        if (viewModel.errorMessage.value == null) { // Only close if no error occurred
+                            onDismiss()
+                        }
                     } else {
                         showError = true
                     }
@@ -87,10 +102,14 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
         },
         dismissButton = {
             Button(
-                onClick = onDismiss,
+                onClick = {
+                    viewModel.clearErrorMessage()
+                    onDismiss()
+                },
             ) {
                 Text("Cancel")
             }
         }
     )
 }
+

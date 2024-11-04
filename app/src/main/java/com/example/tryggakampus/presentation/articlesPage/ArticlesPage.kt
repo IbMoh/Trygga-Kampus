@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,13 +56,14 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
     val localContext = LocalContext.current
     var showAddDialog by remember { mutableStateOf(false) }
     var articleToDelete by remember { mutableStateOf<ArticleModel?>(null) }
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadArticles(localContext)
     }
 
     if (viewModel.loadingArticles.value) {
-        Column (
+        Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -93,22 +95,22 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                         style = MaterialTheme.typography.bodyLarge
                     )
                 } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 80.dp),
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
-                ) {
-                    items(viewModel.articles) { item: ArticleModel ->
-                        ArticleBox(
-                            article = item,
-                            onDelete = { articleToDelete = item },
-                            onClick = {},
-                            deleteMode = viewModel.deleteMode
-                        )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 80.dp),
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                    ) {
+                        items(viewModel.articles) { item: ArticleModel ->
+                            ArticleBox(
+                                article = item,
+                                onDelete = { articleToDelete = item },
+                                onClick = {},
+                                deleteMode = viewModel.deleteMode
+                            )
+                        }
                     }
                 }
-                    }
 
                 if (viewModel.deleteMode) {
                     FloatingActionButton(
@@ -174,9 +176,23 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     }
                 )
             }
+
+            if (errorMessage != null) {
+                AlertDialog(
+                    onDismissRequest = { viewModel.clearErrorMessage() },
+                    title = { Text("Error") },
+                    text = { Text(errorMessage ?: "An unknown error occurred.") },
+                    confirmButton = {
+                        Button(onClick = { viewModel.clearErrorMessage() }) {
+                            Text("OK")
+                        }
+                    }
+                )
+            }
         }
     )
 }
+
 
 @Composable
 fun ArticleBox(

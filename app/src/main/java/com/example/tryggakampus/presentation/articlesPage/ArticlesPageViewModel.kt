@@ -1,7 +1,6 @@
 package com.example.tryggakampus.presentation.articlesPage
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,8 +11,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tryggakampus.dataStore
 import com.example.tryggakampus.domain.model.ArticleModel
+import com.example.tryggakampus.domain.repository.ArticleRepository
 import com.example.tryggakampus.domain.repository.ArticleRepositoryImpl
 import com.google.firebase.firestore.Source
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -26,18 +28,20 @@ class ArticlesPageViewModel : ViewModel() {
         private set
     var loadingArticles = mutableStateOf(true)
         private set
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
     init {
         viewModelScope.launch {
-            ArticleRepositoryImpl.articlesFlow.collect { updatedArticles ->
+            ArticleRepositoryImpl._articlesFlow.collect { updatedArticles ->
                 articles.clear()
                 articles.addAll(updatedArticles)
             }
         }
     }
 
-    private fun setLoadingArticles(b: Boolean) {
-        loadingArticles.value = b
+    private fun setLoadingArticles(isLoading: Boolean) {
+        loadingArticles.value = isLoading
     }
 
     fun loadArticles(context: Context) {
@@ -61,12 +65,25 @@ class ArticlesPageViewModel : ViewModel() {
                 articles.clear()
             }
 
-            val fetchedArticles = ArticleRepositoryImpl.getAllArticles(source)
-            articles.clear()
-            articles.addAll(fetchedArticles)
 
-            if (source == Source.SERVER) {
-                updateArticlesFetchTime(context)
+            val (result, fetchedArticles) = ArticleRepositoryImpl.getAllArticles(source)
+            when (result) {
+                ArticleRepository.RepositoryResult.SUCCESS -> {
+                    articles.clear()
+                    articles.addAll(fetchedArticles)
+                    if (source == Source.SERVER) {
+                        updateArticlesFetchTime(context)
+                    }
+                }
+                ArticleRepository.RepositoryResult.ERROR_NETWORK -> {
+                    _errorMessage.value = "Network error occurred. Please check your connection."
+                }
+                ArticleRepository.RepositoryResult.ERROR_DATABASE -> {
+                    _errorMessage.value = "Database error. Could not fetch articles."
+                }
+                ArticleRepository.RepositoryResult.ERROR_UNKNOWN -> {
+                    _errorMessage.value = "An unexpected error occurred while loading articles."
+                }
             }
 
             setLoadingArticles(false)
@@ -75,7 +92,6 @@ class ArticlesPageViewModel : ViewModel() {
 
     private suspend fun updateArticlesFetchTime(context: Context) {
         val lastFetchTimeKey = longPreferencesKey("articles_last_fetch_time")
-
         context.dataStore.edit { settings ->
             settings[lastFetchTimeKey] = System.currentTimeMillis()
         }
@@ -83,7 +99,7 @@ class ArticlesPageViewModel : ViewModel() {
 
     fun addArticle(title: String, summary: String, webpage: String) {
         if (title.isBlank() || summary.isBlank() || webpage.isBlank()) {
-            Log.d("AddArticleError", "Title, summary, and webpage cannot be empty.")
+            _errorMessage.value = "Title, summary, and webpage cannot be empty."
             return
         }
 
@@ -94,16 +110,19 @@ class ArticlesPageViewModel : ViewModel() {
                 summary = summary,
                 webpage = webpage
             )
-            ArticleRepositoryImpl.addArticle(newArticle)
+
+            val result = ArticleRepositoryImpl.addArticle(newArticle)
+            if (result != ArticleRepository.RepositoryResult.SUCCESS) {
+                _errorMessage.value = "Failed to add article. Please try again."
+            }
         }
     }
 
     fun deleteArticle(article: ArticleModel) {
         viewModelScope.launch {
-            try {
-                ArticleRepositoryImpl.deleteArticle(article.id)
-            } catch (e: Exception) {
-                Log.d("DeleteArticleError", "Error deleting article: ${e.localizedMessage}")
+            val result = ArticleRepositoryImpl.deleteArticle(article.id)
+            if (result != ArticleRepository.RepositoryResult.SUCCESS) {
+                _errorMessage.value = "Failed to delete article."
             }
         }
     }
@@ -111,6 +130,12 @@ class ArticlesPageViewModel : ViewModel() {
     fun toggleDeleteMode() {
         deleteMode = !deleteMode
     }
+
+
+    fun clearErrorMessage() {
+        _errorMessage.value = null
+    }
 }
+
 
 
