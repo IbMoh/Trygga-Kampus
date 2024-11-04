@@ -99,7 +99,7 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 80.dp),
+                            .padding(vertical = 10.dp, horizontal = 20.dp),
                         verticalArrangement = Arrangement.spacedBy(15.dp)
                     ) {
                         items(viewModel.articles) { item: ArticleModel ->
