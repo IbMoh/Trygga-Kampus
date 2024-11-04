@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.tryggakampus.presentation.component.OutlinedInput
 
 @Composable
 fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
@@ -34,41 +36,31 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
         title = { Text("New Article") },
         text = {
             Column {
-                OutlinedTextField(
+                OutlinedInput(
+                    label = "Title",
                     value = title,
-                    onValueChange = {
-                        title = it
-                        showError = false
-                    },
-                    label = { Text("Title") },
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = showError && title.isBlank(),
+                    onValueChange = { title = it; showError = false },
+                    isError = showError && title.isBlank()
                 )
-                OutlinedTextField(
+
+                OutlinedInput(
+                    label = "Summary",
                     value = summary,
-                    onValueChange = {
-                        summary = it
-                        showError = false
-                    },
-                    label = { Text("Summary") },
-                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = { summary = it; showError = false },
                     isError = showError && summary.isBlank()
                 )
-                OutlinedTextField(
+
+                OutlinedInput(
+                    label = "Webpage URL",
                     value = webpage,
-                    onValueChange = {
-                        webpage = it
-                        showError = false
-                    },
-                    label = { Text("Webpage URL") },
-                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = { webpage = it; showError = false },
                     isError = showError && webpage.isBlank()
                 )
 
                 if (showError) {
                     Text(
                         text = "All fields are required.",
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
@@ -76,7 +68,7 @@ fun AddArticleDialog(onDismiss: () -> Unit, viewModel: ArticlesPageViewModel) {
                 if (errorMessage != null) {
                     Text(
                         text = errorMessage ?: "",
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
