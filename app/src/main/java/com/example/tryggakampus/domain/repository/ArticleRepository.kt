@@ -2,6 +2,7 @@ package com.example.tryggakampus.domain.repository
 
 import android.util.Log
 import com.example.tryggakampus.domain.model.ArticleModel
+import com.example.tryggakampus.domain.repository.ArticleRepository.RepositoryResult
 import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -9,7 +10,6 @@ import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.flow.MutableStateFlow
 
 interface ArticleRepository {
     enum class RepositoryResult {
@@ -20,25 +20,24 @@ interface ArticleRepository {
     }
 
     suspend fun getAllArticles(source: Source): Pair<RepositoryResult, List<ArticleModel>>
-    suspend fun addArticle(article: ArticleModel): RepositoryResult
+    suspend fun addArticle(article: ArticleModel): Pair<RepositoryResult, ArticleModel?>
     suspend fun deleteArticle(articleId: String): RepositoryResult
     suspend fun fetchAll(source: Source): QuerySnapshot?
 }
 
 object ArticleRepositoryImpl : ArticleRepository {
     private const val COLLECTION_NAME = "articles"
-    val articlesFlow = MutableStateFlow<List<ArticleModel>>(emptyList())
 
-    override suspend fun getAllArticles(source: Source): Pair<ArticleRepository.RepositoryResult, List<ArticleModel>> {
+    override suspend fun getAllArticles(source: Source): Pair<RepositoryResult, List<ArticleModel>> {
         val result = fetchAll(source)
         return if (result != null) {
             val articles = result.map { document ->
                 document.toObject(ArticleModel::class.java).apply { id = document.id }
             }
-            articlesFlow.value = articles
-            ArticleRepository.RepositoryResult.SUCCESS to articles
+
+            RepositoryResult.SUCCESS to articles
         } else {
-            ArticleRepository.RepositoryResult.ERROR_DATABASE to emptyList()
+            RepositoryResult.ERROR_DATABASE to emptyList()
         }
     }
 
@@ -58,45 +57,42 @@ object ArticleRepositoryImpl : ArticleRepository {
         }
     }
 
-    override suspend fun addArticle(article: ArticleModel): ArticleRepository.RepositoryResult {
-        val updatedArticles = articlesFlow.value.toMutableList().apply { add(article) }
-        articlesFlow.value = updatedArticles
-
+    override suspend fun addArticle(article: ArticleModel): Pair<RepositoryResult, ArticleModel?> {
         return try {
-            Firebase.firestore
+            val result = Firebase.firestore
                 .collection(COLLECTION_NAME)
-                .document(article.id)
-                .set(article)
+                .add(article)
                 .await()
-            ArticleRepository.RepositoryResult.SUCCESS
+
+            val articleModel = result.get().await().toObject(ArticleModel::class.java)?.apply {
+                this.id = result.id
+            }
+
+            RepositoryResult.SUCCESS to articleModel
         } catch (e: FirebaseFirestoreException) {
             Log.d("AddArticleError", "Network or database error: ${e.message}")
-            ArticleRepository.RepositoryResult.ERROR_NETWORK
+            RepositoryResult.ERROR_NETWORK to null
         } catch (e: Exception) {
             Log.d("AddArticleError", "Unknown error: ${e.stackTraceToString()}")
-            ArticleRepository.RepositoryResult.ERROR_UNKNOWN
+            RepositoryResult.ERROR_UNKNOWN to null
         }
     }
 
-    override suspend fun deleteArticle(articleId: String): ArticleRepository.RepositoryResult {
-        val updatedArticles = articlesFlow.value.toMutableList().apply {
-            removeAll { it.id == articleId }
-        }
-        articlesFlow.value = updatedArticles
-
+    override suspend fun deleteArticle(articleId: String): RepositoryResult {
         return try {
             Firebase.firestore
                 .collection(COLLECTION_NAME)
                 .document(articleId)
                 .delete()
                 .await()
-            ArticleRepository.RepositoryResult.SUCCESS
+
+            RepositoryResult.SUCCESS
         } catch (e: FirebaseFirestoreException) {
             Log.d("DeleteArticleError", "Network or database error: ${e.message}")
-            ArticleRepository.RepositoryResult.ERROR_NETWORK
+            RepositoryResult.ERROR_NETWORK
         } catch (e: Exception) {
             Log.d("DeleteArticleError", "Unknown error: ${e.stackTraceToString()}")
-            ArticleRepository.RepositoryResult.ERROR_UNKNOWN
+            RepositoryResult.ERROR_UNKNOWN
         }
     }
 }

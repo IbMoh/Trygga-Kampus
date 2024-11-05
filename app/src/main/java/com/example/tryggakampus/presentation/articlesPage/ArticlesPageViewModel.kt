@@ -29,19 +29,10 @@ class ArticlesPageViewModel : ViewModel() {
         private set
     val errorMessage = MutableStateFlow<String?>(null)
 
-
-    init {
-        viewModelScope.launch {
-            ArticleRepositoryImpl.articlesFlow.collect { updatedArticles ->
-                articles.clear()
-                articles.addAll(updatedArticles)
-            }
-        }
-    }
-
     private fun setLoadingArticles(isLoading: Boolean) {
         loadingArticles.value = isLoading
     }
+
     fun loadArticles(context: Context) {
         viewModelScope.launch {
             setLoadingArticles(true)
@@ -102,17 +93,19 @@ class ArticlesPageViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            val newArticle = ArticleModel(
-                id = UUID.randomUUID().toString(),
+            val (result, newArticle) = ArticleRepositoryImpl.addArticle(ArticleModel(
+                // id = UUID.randomUUID().toString(),
                 title = title,
                 summary = summary,
                 webpage = webpage
-            )
+            ))
 
-            val result = ArticleRepositoryImpl.addArticle(newArticle)
             if (result != ArticleRepository.RepositoryResult.SUCCESS) {
                 errorMessage.value = "Failed to add article. Please try again."
+                return@launch
             }
+
+            articles.add(0, newArticle!!)
         }
     }
 
@@ -122,6 +115,8 @@ class ArticlesPageViewModel : ViewModel() {
             if (result != ArticleRepository.RepositoryResult.SUCCESS) {
                 errorMessage.value = "Failed to delete article."
             }
+
+            articles.removeIf { a -> a.id == article.id }
         }
     }
 

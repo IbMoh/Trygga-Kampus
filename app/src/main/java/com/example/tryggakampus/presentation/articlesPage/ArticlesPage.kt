@@ -50,6 +50,8 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tryggakampus.ConnectivityObserver
+import com.example.tryggakampus.NetworkConnectivityObserver
 import com.example.tryggakampus.domain.model.ArticleModel
 
 @Composable
@@ -58,6 +60,13 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
     var showAddDialog by remember { mutableStateOf(false) }
     var articleToDelete by remember { mutableStateOf<ArticleModel?>(null) }
     val errorMessage by viewModel.errorMessage.collectAsState()
+
+    val connectivityObserver: ConnectivityObserver = NetworkConnectivityObserver(localContext)
+    val networkStatusState = connectivityObserver
+        .observe()
+        .collectAsState(
+            initial = ConnectivityObserver.Status.Unavailable
+        )
 
     LaunchedEffect(Unit) {
         viewModel.loadArticles(localContext)
@@ -111,6 +120,12 @@ fun ArticlesPage(viewModel: ArticlesPageViewModel = viewModel()) {
                             )
                         }
                     }
+                }
+
+                if (networkStatusState.value == ConnectivityObserver.Status.Unavailable ||
+                    networkStatusState.value == ConnectivityObserver.Status.Lost
+                ) {
+                    return@Scaffold
                 }
 
                 if (viewModel.deleteMode) {
