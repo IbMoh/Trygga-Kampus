@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class ArticlesPageViewModel : ViewModel() {
     var articles = mutableStateListOf<ArticleModel>()
@@ -94,7 +93,6 @@ class ArticlesPageViewModel : ViewModel() {
 
         viewModelScope.launch {
             val (result, newArticle) = ArticleRepositoryImpl.addArticle(ArticleModel(
-                // id = UUID.randomUUID().toString(),
                 title = title,
                 summary = summary,
                 webpage = webpage
