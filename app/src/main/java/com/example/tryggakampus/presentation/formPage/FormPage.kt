@@ -37,7 +37,7 @@ fun FormPage(title: String) {
         ) {
             Image(
                 painter = painterResource(R.drawable.helping_hands1),
-                contentDescription = "Logo"
+                contentDescription = "helping hands logo"
             )
             FormsFields(
                 name,
